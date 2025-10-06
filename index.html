@@ -1,60 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Programs 9 to 13 Showcase</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    section {
-      background-color: #fff;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    iframe {
-      width: 100%;
-      height: 500px;
-      border: 1px solid #ccc;
-    }
-    h2 {
-      color: #333;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Snippets</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            overflow: auto;
+            padding: 0 20px;
+        }
+        .code-block {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #337ab7;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background: #286090;
+        }
+    </style>
 </head>
 <body>
-  <h1>Programs 9 to 13</h1>
 
-  <section>
-    <h2>Program 9 - XML to Table</h2>
-    <iframe srcdoc='<!DOCTYPE html><html><head><title>XML to Table (Inline)</title><style>table,th,td{border:1px solid black;border-collapse:collapse;}th,td{padding:8px;}body{font-family:Arial,sans-serif;background-color:antiquewhite;padding:20px;}</style></head><body><h2>Book Library</h2><table id="bookTable"><thead><tr><th>Title</th><th>Author</th><th>Edition</th><th>Publisher</th><th>Price</th><th>Year</th></tr></thead><tbody></tbody></table><script>const xmlString=`<LIBRARY><BOOKS><TITLE>Web Programming</TITLE><AUTHOR>Robert Sabaste</AUTHOR><EDITION>3rd edition</EDITION><PUBLISHER>Prentice hall</PUBLISHER><PRICE>Rs.450</PRICE><YEAR>2015</YEAR></BOOKS><BOOKS><TITLE>Internet Programming</TITLE><AUTHOR>Bala Guruswamy</AUTHOR><EDITION>1st Edition</EDITION><PUBLISHER>cmrims</PUBLISHER><PRICE>300</PRICE><YEAR>2016</YEAR></BOOKS><BOOKS><TITLE>C++ Programming</TITLE><AUTHOR>Bala Govindu</AUTHOR><EDITION>3rd Edition</EDITION><PUBLISHER>Himalaya</PUBLISHER><PRICE>300</PRICE><YEAR>2010</YEAR></BOOKS><BOOKS><TITLE>C++ Programming</TITLE><AUTHOR>Govindu</AUTHOR><EDITION>3rd Edition</EDITION><PUBLISHER>Aditya Publishers</PUBLISHER><PRICE>300</PRICE><YEAR>2010</YEAR></BOOKS></LIBRARY>`;const parser=new DOMParser();const xmlDoc=parser.parseFromString(xmlString,"text/xml");const books=xmlDoc.getElementsByTagName("BOOKS");const tableBody=document.querySelector("#bookTable tbody");for(let i=0;i<books.length;i++){const row=document.createElement("tr");["TITLE","AUTHOR","EDITION","PUBLISHER","PRICE","YEAR"].forEach(tag=>{const cell=document.createElement("td");cell.textContent=books[i].getElementsByTagName(tag)[0].textContent;row.appendChild(cell);});tableBody.appendChild(row);}</script></body></html>'></iframe>
-  </section>
+    <div class="container">
+        <h1>R Code Snippets</h1>
 
-  <section>
-    <h2>Program 10 - Student Info Submission</h2>
-    <iframe srcdoc='<!DOCTYPE html><html><head><title>Student Info</title></head><body><form><center><h2>Student Information</h2><table bgcolor="lightblue" align="center"><tr><td>Student ID:</td><td><input type="text" name="sid"></td></tr><tr><td>Student Name:</td><td><input type="text" name="uname"></td></tr><tr><td>Register Number:</td><td><input type="text" name="unum"></td></tr><tr><td>Course:</td><td><input type="text" name="ucourse"></td></tr><tr><td>University:</td><td><input type="text" name="uni"></td></tr><tr><td colspan="2" align="center"><input type="submit"></td></tr></table></center></form></body></html>'></iframe>
-  </section>
+        <div class="code-block">
+            <h2>Program 1: Export Data Frame to Excel</h2>
+            <button class="copy-btn" onclick="copyToClipboard('code1')">Copy</button>
+            <pre id="code1"><code>
+# 1. Create a sample data frame
+employees &lt;- data.frame(
+ID = 101:103,
+Name = c("John Doe", "Jane Smith", "Peter Jones"),
+Department = c("Sales", "Marketing", "Engineering"),
+Salary = c(60000, 75000, 85000)
+)
+# Print the data frame to the console to see what we're exporting
+print("Data frame to be exported:")
+print(employees)
+# 2. Export the data frame to an Excel (.xlsx) file
+# The first argument is the data frame, the second is the file name
+write_xlsx(employees, "employees_data.xlsx")
+# Print a confirmation message
+print("Data frame successfully exported to employees_data.xlsx")
+            </code></pre>
+        </div>
 
-  <section>
-    <h2>Program 11 - Search Student</h2>
-    <iframe srcdoc='<!DOCTYPE html><html><head><title>Search Student</title><style>.container{width:400px;height:80px;border:3px solid black;margin-top:110px;background-color:orange;}</style></head><body><form><center><div class="container">Enter Student ID to search Student details<br><label>Student ID : </label><input type="text" name="sid" /><br /><br /><input type="submit" /></div></center></form></body></html>'></iframe>
-  </section>
+        <div class="code-block">
+            <h2>Program 2: Data Import and Export</h2>
+            <button class="copy-btn" onclick="copyToClipboard('code2')">Copy</button>
+            <pre id="code2"><code>
+# Main program script
+# Load required libraries
+library(readxl)
+library(data.table)
+# -----------------
+# Data Import
+# -----------------
+# Import CSV file
+csv_data &lt;- fread("sample_data.csv")
+print("Imported CSV Data:")
+print(head(csv_data))
+# Import Excel file
+# Make sure sample_data.xlsx exists with a sheet named 'Sheet1'
+excel_data &lt;- read_excel("sample_data.xlsx", sheet = "Sheet1")
+print("Imported Excel Data:")
+print(head(excel_data))
+# Import Text file
+# Make sure sample_data.txt exists
+text_data &lt;- read.table("sample_data.txt", header = TRUE, sep = ",")
+print("Imported Text Data:")
+print(head(text_data))
+# -----------------
+# Data Export
+# -----------------
+# Create a sample data frame
+df_to_export &lt;- data.frame(
+ID = c(101, 102, 103),
+Product = c("Laptop", "Mouse", "Keyboard"),
+Price = c(1200, 25, 75)
+)
+# Export to CSV
+write.csv(df_to_export, "products_exported.csv", row.names = FALSE)
+print("Data exported to products_exported.csv")
+# Export to Text file
+write.table(df_to_export, "products_exported.txt", sep = "\t", row.names = FALSE)
+print("Data exported to products_exported.txt")
+            </code></pre>
+        </div>
 
-  <section>
-    <h2>Program 12 - Update Employee</h2>
-    <iframe srcdoc='<!DOCTYPE html><html><head><title>Update Employee</title></head><body><form><center><div><h2 class="heading2" align="center"> Student Information </h2><table bgcolor="lightblue"><tr><td>Employee ID: </td><td><input type="text" name="empid"></td></tr><tr><td>Employee Name: </td><td><input type="text" name="empname"></td></tr><tr><td>Employee Designation: </td><td><input type="text" name="empdesig"></td></tr><tr><td>Employee Salary: </td><td><input type="text" name="empsal"></td></tr><tr><td colspan="2" align="center"><input type="submit"></td></tr></table></div></center></form></body></html>'></iframe>
-  </section>
+        <div class="code-block">
+            <h2>Program 3: Skewness, Kurtosis, and Visualization</h2>
+            <button class="copy-btn" onclick="copyToClipboard('code3')">Copy</button>
+            <pre id="code3"><code>
+# 1. Install and load necessary libraries
+# 'e1071' library is great for calculating skewness and kurtosis
+install.packages("e1071")
+# 'ggplot2' is a powerful library for data visualization
+install.packages("ggplot2")
+library(e1071)
+library(ggplot2)
+# 2. Create a sample dataset
+# A slightly larger dataset for better visualization
+data &lt;- c(23, 45, 67, 12, 89, 34, 56, 78, 91, 15, 42, 63,
+          55, 60, 75, 82, 30, 48, 70, 85, 95, 25, 38, 52)
+# 3. Measures of Shape (Skewness and Kurtosis)
+# Skewness: Measures the asymmetry of the data distribution
+# A value of 0 means a perfectly symmetrical distribution
+# A positive value means a right-skewed distribution (tail on the right)
+# A negative value means a left-skewed distribution (tail on the left)
+skewness_value &lt;- skewness(data)
+cat("Skewness:", skewness_value, "\n")
+# Kurtosis: Measures the "tailedness" of the data distribution
+# A high kurtosis value means the distribution has fatter tails and a sharper peak
+# A low kurtosis value means the distribution has lighter tails and a flatter peak
+kurtosis_value &lt;- kurtosis(data)
+cat("Kurtosis:", kurtosis_value, "\n")
+# 4. Data Visualization
+# Histogram: Visualizes the distribution of the data
+hist(data,
+main = "Histogram of Sample Data",
+xlab = "Values",
+     ylab = "Frequency",
+col = "lightblue",
+     border = "black")
+# The 'hist()' function automatically bins the data and plots the frequencies.
+# Boxplot: Provides a visual summary of the five-number summary (min, Q1, median, Q3, max)
+# It's excellent for identifying outliers
+boxplot(data,
+main = "Boxplot of Sample Data",
+ylab = "Values",
+        col = "lightgreen",
+        border = "black")
+# Using ggplot2 for more professional-looking plots
+# Histogram
+ggplot(data.frame(data), aes(x = data)) +
+  geom_histogram(binwidth = 10, fill = "salmon", color = "black") +
+  ggtitle("Histogram using ggplot2") +
+xlab("Values") +
+  ylab("Frequency")
+# Boxplot
+ggplot(data.frame(data), aes(y = data)) +
+  geom_boxplot(fill = "orange", color = "black") +
+  ggtitle("Boxplot using ggplot2") +
+ylab("Values")
+            </code></pre>
+        </div>
 
-  <section>
-    <h2>Program 13 - Delete Employee</h2>
-    <a href="https://docs.google.com/document/d/1SVFTevUHw_OMaAxKvvThXpKwkg3UcBZ6yZILUkJlybs/edit?tab=t.zf7eg6eutc0z">click</a>
-  </section>
+        <div class="code-block">
+            <h2>Program 4: Missing Data Handling</h2>
+            <button class="copy-btn" onclick="copyToClipboard('code4')">Copy</button>
+            <pre id="code4"><code>
+# R Program: Missing Data Handling Demonstration in Data Preprocessing
+# -----------------------------------------------------------------------------
+# Load necessary libraries
+# The 'dplyr' and 'tidyr' packages are part of the 'tidyverse' and are
+# excellent for data manipulation and cleaning.
+if (!require(tidyverse)) {
+install.packages("tidyverse", dependencies = TRUE)
+library(tidyverse)
+}
+# -----------------------------------------------------------------------------
+# Step 1: Create a Sample Dataset with Missing Values
+# -----------------------------------------------------------------------------
+cat("Step 1: Creating a sample dataset with missing values...\n\n")
+set.seed(42)
+customer_data &lt;- tibble(
+customer_id = 1:10,
+age = c(25, 30, NA, 45, 28, 50, NA, 35, 60, 42),
+annual_income = c(50000, 65000, 48000, NA, 75000, 90000, 55000, 62000, NA, 80000),
+gender = c("Male", "Female", "Male", NA, "Female", "Male", "Female", "Male", NA, "Female"),
+satisfaction_score = c(4, 5, 3, 2, 5, 4, 3, NA, 5, 4)
+)
+print(customer_data)
+# -----------------------------------------------------------------------------
+# Step 2: Identify Missing Values
+# -----------------------------------------------------------------------------
+cat("\n\nStep 2: Identifying missing values...\n\n")
+cat("Output of is.na() on the 'age' column:\n")
+print(is.na(customer_data$age))
+cat("\nNumber of missing values per column:\n")
+print(colSums(is.na(customer_data)))
+cat("\nAre there any missing values in the entire dataset?\n")
+print(any(is.na(customer_data)))
+# -----------------------------------------------------------------------------
+# Step 3: Common Methods for Handling Missing Values
+# -----------------------------------------------------------------------------
+cat("\n\nMethod A: Deleting rows with missing values (Listwise Deletion)...\n\n")
+data_no_na &lt;- na.omit(customer_data)
+cat("Original data dimensions:", dim(customer_data), "\n")
+cat("Dimensions after deleting rows:", dim(data_no_na), "\n")
+print(data_no_na)
+cat("\n\nMethod B: Imputing 'annual_income' with its median...\n\n")
+data_imputed_median &lt;- customer_data
+median_income &lt;- median(data_imputed_median$annual_income, na.rm = TRUE)
+data_imputed_median$annual_income[is.na(data_imputed_median$annual_income)] &lt;-
+median_income
+cat("Median annual income:", median_income, "\n")
+cat("Data after median imputation:\n")
+print(data_imputed_median)
+cat("\n\nMethod C: Imputing 'gender' with its mode...\n\n")
+data_imputed_mode &lt;- customer_data
+mode_gender &lt;- names(which.max(table(data_imputed_mode$gender)))
+data_imputed_mode$gender[is.na(data_imputed_mode$gender)] &lt;- mode_gender
+cat("Mode gender:", mode_gender, "\n")
+cat("Data after mode imputation:\n")
+print(data_imputed_mode)
+cat("\n\nMethod D: Using `tidyr::fill()` for Time-Series or Sequential Data ...\n\n")
+time_series_data &lt;- tibble(
+date = 1:5,
+stock_price = c(100, NA, 105, NA, 110)
+)
+filled_data &lt;- time_series_data %>%
+fill(stock_price, .direction = "down")
+cat("Original sequential data:\n")
+print(time_series_data)
+cat("\nData after filling 'down':\n")
+print(filled_data)
+# -----------------------------------------------------------------------------
+# Step 4: Acknowledging Advanced Imputation Methods
+# -----------------------------------------------------------------------------
+cat("\n\nStep 4: Acknowledging advanced methods...\n\n")
+cat("While the above methods are simple and effective for many cases, advanced\n")
+cat("imputation techniques exist for more complex scenarios. These methods,\n")
+cat("such as K-Nearest Neighbors (KNN) or Multiple Imputation by Chained\n")
+cat("Equations (MICE), use the relationships between variables to estimate\n")
+cat("missing values. They often provide more accurate and robust results\n")
+cat("than simple mean/median imputation.\n")
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 5: Data Normalization</h2>
+            <button class="copy-btn" onclick="copyToClipboard('code5')">Copy</button>
+            <pre id="code5"><code>
+# R Program: Data Normalization Demonstration
+# -----------------------------------------------------------------------------
+# Load necessary libraries
+if (!require(tidyverse)) {
+install.packages("tidyverse", dependencies = TRUE)
+library(tidyverse)
+}
+# -----------------------------------------------------------------------------
+# Step 1: Create a Sample Dataset
+# -----------------------------------------------------------------------------
+cat("Step 1: Creating a sample dataset with different scales...\n\n")
+customer_data &lt;- tibble(
+customer_id = 1:10,
+annual_income = c(50, 65, 48, 95, 75, 90, 55, 62, 120, 80),
+satisfaction_score = c(4, 5, 3, 9, 7, 8, 5, 6, 10, 7)
+)
+print(customer_data)
+cat("\nSummary of original data:\n")
+print(summary(customer_data))
+# -----------------------------------------------------------------------------
+# Step 2: Min-Max Normalization (Scaling to a [0, 1] range)
+# -----------------------------------------------------------------------------
+cat("\n\nStep 2: Performing Min-Max Normalization...\n\n")
+min_max_normalize &lt;- function(x) {
+return((x - min(x)) / (max(x) - min(x)))
+}
+normalized_min_max_data &lt;- customer_data %>%
+mutate(
+income_min_max = min_max_normalize(annual_income),
+score_min_max = min_max_normalize(satisfaction_score)
+)
+print(normalized_min_max_data)
+cat("\nSummary of Min-Max normalized data:\n")
+print(summary(select(normalized_min_max_data, starts_with("income_"), starts_with("score_"))))
+# -----------------------------------------------------------------------------
+# Step 3: Z-Score Standardization
+# -----------------------------------------------------------------------------
+cat("\n\nStep 3: Performing Z-Score Standardization...\n\n")
+z_score_standardize &lt;- function(x) {
+return((x - mean(x)) / sd(x))
+}
+standardized_z_score_data &lt;- customer_data %>%
+mutate(
+income_z_score = z_score_standardize(annual_income),
+score_z_score = z_score_standardize(satisfaction_score)
+)
+print(standardized_z_score_data)
+cat("\nSummary of Z-Score standardized data:\n")
+print(summary(select(standardized_z_score_data, starts_with("income_"), starts_with("score_"))))
+# -----------------------------------------------------------------------------
+# Step 4: Visual Comparison (Optional but Recommended)
+# -----------------------------------------------------------------------------
+cat("\n\nStep 4: Creating a visual comparison plot...\n\n")
+long_data &lt;- standardized_z_score_data %>%
+select(customer_id, annual_income, income_z_score, satisfaction_score, score_z_score) %>%
+pivot_longer(
+cols = -customer_id,
+names_to = "variable",
+values_to = "value"
+)
+normalization_plot &lt;- ggplot(long_data, aes(x = value, fill = variable)) +
+geom_density(alpha = 0.5) +
+facet_wrap(~variable, scales = "free") +
+labs(
+title = "Comparison of Original vs. Z-Score Standardized Data",
+x = "Value",
+y = "Density"
+) +
+theme_minimal() +
+theme(legend.position = "none")
+print(normalization_plot)
+            </code></pre>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const code = document.getElementById(elementId).innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Copied to clipboard!');
+        }
+    </script>
+
 </body>
 </html>
