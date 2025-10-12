@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML - Coming Soon</title>
+    <title>ML Code Snippets</title>
     <style>
         body {
             font-family: sans-serif;
@@ -11,30 +11,55 @@
             margin: 20px;
             background-color: #f4f4f4;
             color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 90vh;
-            text-align: center;
         }
         .container {
             max-width: 800px;
             margin: auto;
+            overflow: auto;
             padding: 0 20px;
         }
-        h1 {
-            font-size: 3em;
-            color: #555;
+        .code-block {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50; /* Green for ML section */
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: #45a049;
         }
         .home-btn {
             display: inline-block;
-            margin-top: 20px;
+            margin-bottom: 20px;
             background: #555;
             color: #fff;
-            padding: 10px 20px;
+            padding: 10px 15px;
             text-decoration: none;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
         }
         .home-btn:hover {
             background: #333;
@@ -42,10 +67,388 @@
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Coming Soon</h1>
-        <p>This section is under construction.</p>
         <a href="index.html" class="home-btn">Back to Home</a>
+        <h1>ML Python Code Snippets</h1>
+
+        <div class="code-block">
+            <h2>Program 1: Pandas Data Exploration</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code1')">Copy</button>
+            <pre id="code1"><code>
+import pandas as pd
+
+# Note: You need to provide your own 'empdata.csv' file.
+# For example: df = pd.read_csv('path/to/your/empdata.csv')
+df = pd.read_csv("/content/empdata.csv")
+
+print(df.head())
+print(df.shape)
+
+# Display every second row
+print(df[::2])
+
+print(df.columns)
+
+total_sum = df.isna().sum().sum()
+print(f"Total NaN values: {total_sum}")
+
+df1 = pd.concat([df,df])
+print(f"Shape after concat: {df1.shape}")
+df1 = df1.drop_duplicates()
+print(f"Shape after dropping duplicates: {df1.shape}")
+
+df.columns = [i.upper() for i in df.columns]
+print(df.columns)
+
+print(df.notnull())
+print('The no. of nulls in each column is \n',df1.isna().sum())
+
+print('Highest Salary is',df['SALARY'].max())
+print('Lowest Salary is', df['SALARY'].min())
+
+print(df[df.SALARY > 20000])
+
+print(df[['EMPID','ENAME']] [df.SALARY == df.SALARY.max()])
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 2: Data Preprocessing Pipeline</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code2')">Copy</button>
+            <pre id="code2"><code>
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+
+data= {
+    'Age': [25, 30, np.nan, 40, 35],
+    'Salary': [50000, 60000, 55000, np.nan, 65000],
+    'Department': ['HR', 'IT', 'Finance', 'IT', np.nan],
+    'Purchased': ['Yes', 'No', 'Yes', 'No', 'Yes']
+}
+
+df=pd.DataFrame(data)
+print("Original Data:")
+print(df)
+
+X=df.drop('Purchased',axis=1)
+y=df['Purchased']
+
+num_features=['Age','Salary']
+cat_features=['Department']
+
+num_pipeline=Pipeline(steps=[
+    ('imputer',SimpleImputer(strategy='mean')),
+    ('scaler',StandardScaler())
+])
+
+cat_pipeline=Pipeline(steps=[
+    ('imputer',SimpleImputer(strategy='most_frequent')),
+    ('encoder',OneHotEncoder(handle_unknown='ignore'))
+])
+
+preprocessor= ColumnTransformer(
+    transformers= [
+        ('num', num_pipeline, num_features),
+        ('cat', cat_pipeline, cat_features)
+    ])
+
+X_clean=preprocessor.fit_transform(X)
+
+# Get feature names after one-hot encoding
+cat_encoder = preprocessor.named_transformers_['cat']['encoder']
+new_cat_features = list(cat_encoder.get_feature_names_out(cat_features))
+feature_names = num_features + new_cat_features
+
+X_clean_df=pd.DataFrame(
+    X_clean.toarray() if hasattr(X_clean,"toarray") else X_clean,
+    columns = feature_names
+)
+
+print("\nCleaned and Transformed Data:")
+print(X_clean_df)
+
+X_train, X_test, y_train, y_test = train_test_split(X_clean_df, y, test_size=0.2, random_state=42)
+
+print("\nTrain Data:")
+print(X_train)
+print("\nTest Data:")
+print(X_test)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 3: Data Visualization</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code3')">Copy</button>
+            <pre id="code3"><code>
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+import plotly.express as px
+from wordcloud import WordCloud
+import networkx as nx
+
+# --- Matplotlib ---
+x = [1 , 2, 3, 4, 5]
+y = [2, 5, 7, 1, 6]
+plt.plot(x,y,marker='x', linestyle= 'dotted')
+plt.title("Line Plot")
+plt.xlabel("X Axis")
+plt.ylabel("Y Axis")
+plt.grid(True)
+plt.show()
+
+x = ["A", "B", "C", "D"]
+y = [3, 1, 7, 10]
+plt.bar(x,y,color="yellow")
+plt.title("Bar Plot")
+plt.xlabel("X Axis")
+plt.ylabel("Y Axis")
+plt.show()
+
+data = np.random.randn(1000)
+plt.hist(data,bins=50,color='blue',alpha=0.5)
+plt.title("Histogram")
+plt.xlabel("Values")
+plt.ylabel("Frequency")
+plt.show()
+
+x = [5,2,5,1,2,3,5,7,9]
+y = [7,2,9,6,5,8,4,3,2]
+plt.scatter(x, y)
+plt.title("Scatter Plot")
+plt.xlabel("X Axis")
+plt.ylabel("Y Axis")
+plt.show()
+
+# --- Seaborn ---
+tips=sns.load_dataset("tips")
+sns.boxplot(x="day",y="total_bill",data=tips)
+plt.title("Box plot of Total Bill by Day")
+plt.show()
+
+numerical_tips = tips.select_dtypes(include=np.number)
+sns.heatmap(numerical_tips.corr(),annot=True,cmap="coolwarm")
+plt.title("Heatmap of Correlations in Tips Dataset")
+plt.show()
+
+iris=sns.load_dataset("iris")
+sns.boxplot(x="species",y="sepal_length",data=iris)
+plt.title("Box plot of Sepal Length by Species")
+plt.show()
+
+numerical_iris = iris.select_dtypes(include=np.number)
+sns.heatmap(numerical_iris.corr(),annot=True,cmap="coolwarm")
+plt.title("Heatmap of Correlations in Iris Dataset")
+plt.show()
+
+# --- Plotly ---
+df=px.data.iris()
+fig=px.scatter(df,x="sepal_width",y="sepal_length",color="species",size="petal_length",hover_data=["petal_width"])
+fig.show()
+
+df_stocks=px.data.stocks()
+fig=px.line(df_stocks,x="date",y=["GOOG","AAPL","AMZN"],title="Stock Prices")
+fig.show()
+
+# --- WordCloud ---
+text = "Python Data Science Visualization Matplotlib Seaborn Plotly AI MachineLearning"
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
+plt.figure(figsize=(10, 5))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.show()
+
+# --- NetworkX ---
+G = nx.karate_club_graph()
+nx.draw(G, with_labels=True, node_color="skyblue", node_size=500, font_size=10)
+plt.show()
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 4: Simple Linear Regression</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code4')">Copy</button>
+            <pre id="code4"><code>
+import pandas as pd
+import statsmodels.api as sm
+from sklearn.model_selection import train_test_split
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import zscore
+
+# Note: You need to provide your own 'MBA Salary.csv' file.
+mba_salary_df = pd.read_csv('/content/MBA Salary.csv')
+print(mba_salary_df.head(3))
+print(mba_salary_df.info())
+
+X = sm.add_constant(mba_salary_df['Percentage in Grade 10'])
+Y = mba_salary_df['Salary']
+
+train_X,test_X,train_y,test_y=train_test_split(X,Y,train_size=0.8,random_state=100)
+
+mba_salary_lm=sm.OLS(train_y,train_X).fit()
+
+print(mba_salary_lm.params)
+print(mba_salary_lm.summary2())
+
+def get_std_values(vals):
+    return(vals - vals.mean())/vals.std()
+
+x_axis = get_std_values(mba_salary_lm.fittedvalues)
+y_axis = get_std_values(mba_salary_lm.resid)
+plt.scatter(x_axis, y_axis)
+plt.xlabel("Standardised Predicted values")
+plt.ylabel("Standardised Residual Values")
+plt.title("Residual Plot")
+plt.show()
+
+mba_salary_df['z_score_salary'] = zscore(mba_salary_df.Salary)
+print("Outliers based on Z-score:")
+print(mba_salary_df[(mba_salary_df.z_score_salary > 3.0)| (mba_salary_df.z_score_salary< -3.0)])
+
+mba_influence = mba_salary_lm.get_influence()
+(c,p) = mba_influence.cooks_distance
+
+plt.stem(np.arange(len(train_X)), np.round(c,3))
+plt.xlabel("Row Index")
+plt.ylabel("Cooks Distance")
+plt.show()
+
+from sklearn.metrics import r2_score, mean_squared_error
+pred_y = mba_salary_lm.predict(test_X)
+print('R2 Score =',np.abs(r2_score(test_y,pred_y)))
+print('RMSE = ', np.sqrt(mean_squared_error(test_y,pred_y)))
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 5: Logistic Regression</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code5')">Copy</button>
+            <pre id="code5"><code>
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, roc_auc_score, roc_curve, auc
+import matplotlib.pyplot as plt
+
+# Note: You need to provide your own 'abc.csv' file with the specified features.
+df = pd.read_csv('/content/abc.csv')
+
+features = ['male', 'age', 'education', 'currentSmoker', 'cigsPerDay',
+            'BPMeds', 'prevalentStroke', 'prevalentHyp', 'diabetes',
+            'totChol', 'sysBP', 'diaBP', 'BMI', 'heartRate', 'glucose']
+X = df[features]
+y = df['TenYearCHD']
+
+# Use chained assignment with .loc to avoid SettingWithCopyWarning
+X.loc[:, features] = X.loc[:, features].fillna(X.mean())
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+model = LogisticRegression(max_iter=1000) # Increased max_iter for convergence
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+y_pred_proba = model.predict_proba(X_test)[:, 1]
+
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+print("AUC-ROC Score:", roc_auc_score(y_test, y_pred_proba))
+
+fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
+roc_auc = auc(fpr, tpr)
+plt.figure(figsize=(8, 6))
+plt.plot(fpr, tpr, color='blue', lw=2, label=f'ROC Curve (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='gray', lw=1, linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('ROC Curve for Logistic Regression')
+plt.legend(loc='lower right')
+plt.show()
+
+coefficients = model.coef_[0]
+feature_importance_df = pd.DataFrame({'Feature': features, 'Coefficient': coefficients})
+feature_importance_df = feature_importance_df.sort_values(by='Coefficient', ascending=True)
+
+plt.figure(figsize=(10, 6))
+plt.barh(feature_importance_df['Feature'], feature_importance_df['Coefficient'])
+plt.xlabel('Coefficient Value')
+plt.title('Feature Importance in Logistic Regression')
+plt.show()
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 6: Naive Bayes Classifier</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code6')">Copy</button>
+            <pre id="code6"><code>
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, classification_report
+import pandas as pd
+
+iris = load_iris()
+x,y=iris.data,iris.target
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.5,random_state=42)
+
+nb=GaussianNB()
+nb.fit(x_train,y_train)
+
+y_pred=nb.predict(x_test)
+
+print("=== Prediction Results ===")
+for i in range(len(y_test)):
+  if(y_test[i]==y_pred[i]):
+    print(f"Correct -> Sample {i}: Predicted = {iris.target_names[y_pred[i]]}, Actual = {iris.target_names[y_test[i]]}")
+  else:
+    print(f"Wrong -> Sample {i}: Predicted = {iris.target_names[y_pred[i]]}, Actual = {iris.target_names[y_test[i]]}")
+
+accuracy=(y_pred == y_test).mean()
+print(f"\nAccuracy: {accuracy:.2f}")
+
+cm=confusion_matrix(y_test,y_pred)
+cm_df=pd.DataFrame(cm,index=iris.target_names,columns=iris.target_names)
+print("\n=== Confusion Matrix ===")
+print(cm_df)
+
+print("\n=== Classification Report ===")
+print(classification_report(y_test,y_pred,target_names=iris.target_names))
+            </code></pre>
+        </div>
     </div>
+
+    <script>
+        function copyToClipboard(event, elementId) {
+            const code = document.getElementById(elementId).innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 1500);
+        }
+    </script>
+
 </body>
 </html>
