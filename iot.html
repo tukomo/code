@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Code Snippets</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            overflow: auto;
+            padding: 0 20px;
+        }
+        .code-block {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #3498DB; /* Blue for IoT section */
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: #2980B9;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #555;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .home-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="home-btn">Back to Home</a>
+        <h1>IoT Code Snippets</h1>
+
+        <div class="code-block">
+            <h2>Installation and Setup</h2>
+            <p><strong>For Python Snippets (Programs 8 and 9):</strong></p>
+            <p>The Python libraries used in these snippets are part of the standard Python library, with the exception of <code>urllib3</code>. You can install it with this command:</p>
+            <pre><code>pip install urllib3</code></pre>
+            <p><strong>For C++/Arduino Snippets (Programs 1-7):</strong></p>
+            <p>To run these snippets, you will need the following:</p>
+            <ul>
+                <li>An Arduino-compatible microcontroller board (e.g., Arduino Uno).</li>
+                <li>The Arduino IDE, which you can download from the official Arduino website.</li>
+                <li>The necessary electronic components for each project (e.g., LEDs, sensors, servo motors).</li>
+                <li>For programs that use specific libraries (e.g., Adafruit_LiquidCrystal, Servo), you will need to install them via the Arduino IDE's Library Manager.</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 1: LED Control</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code1')">Copy</button>
+            <pre id="code1"><code>
+String str;
+void setup()
+{
+  pinMode(12, OUTPUT);
+  Serial.begin(9600);
+}
+void loop()
+{
+  str = Serial.readString();
+  delay(1000);
+        if(str != "")
+        {
+          str.trim();
+
+          if(str == "on")
+          {
+            digitalWrite(12, HIGH);
+            Serial.println("light is on");
+          }
+          else if(str == "off")
+          {
+            digitalWrite(12, LOW);
+            Serial.println("light is off");
+    }
+          else{
+      Serial.println("Invalid Input!!!");
+  }
+          delay(1000);
+}
+}
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 2: PIR Motion Sensor</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code2')">Copy</button>
+            <pre id="code2"><code>
+int pirPin = 2;
+int ledPin = 13;
+int pirState = LOW;
+int val = 0;
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(pirPin, INPUT);
+  Serial.begin(9600);
+  Serial.println("PIR Sensor Test Started...");
+}
+
+void loop() {
+  val = digitalRead(pirPin);
+
+  if (val == HIGH) {
+    digitalWrite(ledPin, HIGH);
+    if (pirState == LOW) {
+      Serial.println("Motion detected!");
+      pirState = HIGH;
+    }
+  }
+  else {
+    digitalWrite(ledPin, LOW);
+    if (pirState == HIGH) {
+      Serial.println("Motion ended!");
+      pirState = LOW;
+    }
+  }
+}
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 3: Ultrasonic Sensor</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code3')">Copy</button>
+            <pre id="code3"><code>
+const int trigPin = 4;
+const int echoPin = 5;
+const int alarmLedPin = 13;
+const int maxDetectionDistance = 50;
+long duration;
+int distanceCm;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(alarmLedPin, OUTPUT);
+  Serial.begin(9600);
+  Serial.println("Intrusion Detection System Ready");
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distanceCm = duration * 0.0343 / 2;
+  Serial.print("Distance: ");
+  Serial.print(distanceCm);
+  Serial.println(" cm");
+
+  if (distanceCm < maxDetectionDistance && distanceCm > 0) {
+    Serial.println("!!! INTRUSION DETECTION !!!");
+    digitalWrite(alarmLedPin, HIGH);
+  } else {
+    digitalWrite(alarmLedPin, LOW);
+  }
+     delay(100);
+}
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 4: Water Level Sensor</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code4')">Copy</button>
+            <pre id="code4"><code>
+#include&lt;Adafruit_LiquidCrystal.h&gt;
+Adafruit_LiquidCrystal lcd1(0);
+void setup(){
+  pinMode(7, OUTPUT);
+  Serial.begin(9600);
+  lcd1.begin(16,2);
+}
+void loop(){
+  int level;
+  lcd1.clear();
+  level=analogRead(0);
+  if(level > 900){
+    digitalWrite(7, HIGH);
+    lcd1.print(level);
+    Serial.println("No water Switching on the motor");
+    lcd1.setBacklight(1);
+  }
+  else{
+    digitalWrite(7, LOW);
+    Serial.println("Analog value");
+    Serial.println(level);
+    lcd1.print(level);
+    lcd1.setBacklight(1);
+  }
+  delay(1000);
+  lcd1.setBacklight(0);
+}
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 5: Servo Motor Control</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code5')">Copy</button>
+            <pre id="code5"><code>
+#include &lt;Servo.h&gt;
+#define trigPin 9
+#define echoPin 10
+#define servoPin 6
+
+long duration;
+int distance;
+Servo gateServo;
+
+void setup()
+{
+gateServo.attach(servoPin);
+pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  if (distance < 30)
+        openGate();
+  else
+    closeGate();
+  delay(500);
+}
+
+void openGate()
+{
+gateServo.write(90);
+Serial.println("Gate is opening...");
+}
+
+void closeGate()
+{
+gateServo.write(0);
+Serial.println("Gate is closing...");
+}
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 6: IR Sensor and Servo</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code6')">Copy</button>
+            <pre id="code6"><code>
+#include &lt;Servo.h&gt;
+Servo myServo;
+int pirSensorPin = 2;
+int servoPin = 7;
+int sensorValue;
+
+void setup() {
+  pinMode(pirSensorPin, INPUT);
+  myServo.attach(servoPin);
+  myServo.write(0);
+  Serial.begin(9600);
+  Serial.println("IR Sensor and Servo Experiment Started");
+}
+
+void loop() {
+  sensorValue = digitalRead(pirSensorPin);
+
+  if (sensorValue == LOW) {
+    Serial.println("Object Detected!");
+    myServo.write(90);
+    delay(1000);
+  } else {
+    Serial.println("No Object");
+    myServo.write(0);
+    delay(1000);
+  }
+}
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 7: Temperature Control System</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code7')">Copy</button>
+            <pre id="code7"><code>
+const int tempPin = A0;   // LM35 output connected to analog pin A0
+const int fanPin  = 8;    // Fan/LED connected to digital pin 8
+float temperature = 0.0;  // Variable to store temperature
+const float threshold = 50.0;  // Temperature threshold in °C
+
+void setup() {
+  Serial.begin(9600);        // Start Serial Monitor
+  pinMode(fanPin, OUTPUT);   // Set fan/LED pin as output
+  Serial.println("Temperature Control System Initialized");
+}
+
+void loop() {
+  int analogValue = analogRead(tempPin);         // Read analog value (0–1023)
+  float voltage = analogValue * (5.0 / 1023.0);  // Convert to voltage (0–5V)
+  temperature = voltage * 100;                   // LM35: 10mV per °C (i.e., 1V = 100°C)
+
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println("°C");
+
+  // Control fan/LED based on temperature
+  if (temperature >= threshold) {
+    digitalWrite(fanPin, HIGH);   // Turn ON fan/LED
+    Serial.println("Fan/LED ON");
+  } else {
+    digitalWrite(fanPin, LOW);    // Turn OFF fan/LED
+    Serial.println("Fan/LED OFF");
+  }
+
+  delay(1000);  // Read every second
+}
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 8: Send Mail</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code8')">Copy</button>
+            <pre id="code8"><code>
+pi:~$
+nano  sendmail.py    #opening editor to write code without subject
+
+
+Import
+smtplib
+
+
+Server=smtplib.SMTP(‘smtp.gmail.com’,587);
+
+
+Server.ehlo_or_helo_if_needed()
+
+
+Server.starttls()
+
+
+Server.ehlo_or_helo_if_needed()
+
+
+Server.login(“xyz@gmail.com”,
+“password”)
+
+
+   #send mail
+
+
+Msg=“Hello”
+
+
+Server.sendmail(“xyz@gmail.com”,
+“target@gmail.com”, Msg)
+
+
+
+
+
+Command
+To RUN above code
+
+
+pi:~$python  sendmail.py
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 9: Thingspeak</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code9')">Copy</button>
+            <pre id="code9"><code>
+#import sys
+#import RPi.GPIO as GPIO
+from time import sleep
+#import Adafruit_DHT
+import urllib3
+
+def getSensorData():
+  #RH,T=Adafruit_DHT.read_retry(Adafruit_DHT.DHT11,4)
+  #return (str(RH),str(T))
+  return (21,31)  #hard coded
+def main():
+  print ('Starting')
+  key='YOUR_API_KEY'   # Write API key from thingspeak
+  baseURL='https://api.thingspeak.com/update?api_key=%s'%key
+  print ('*')
+  while True:
+    try:
+      RH,T=getSensorData()
+      http = urllib3.PoolManager()
+      r = http.request('POST',url=baseURL+'&field1=%s &field2=%s'%(T,RH))
+      #req=urllib3.Request(url=baseURL+'&field1=%s &field2=%s'%(T,RH))
+      #f=urllib3.urlopen(req)
+      print(r.data)
+
+      #print (f.d ate())
+      print ("Humidity "+str(RH) +"%")
+      print ("Temperture "+str(T) +"C")
+
+    #  f.close
+      sleep(15)
+    #  GPIO.cleanup()
+    except:
+      print (sys.exc_info()[0])
+    break
+#calling main method
+main()
+            </code></pre>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(event, elementId) {
+            const code = document.getElementById(elementId).innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>

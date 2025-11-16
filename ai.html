@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Snippets</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            overflow: auto;
+            padding: 0 20px;
+        }
+        .code-block {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #FF5733; /* Orange for AI section */
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: #E74C3C;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #555;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .home-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="home-btn">Back to Home</a>
+        <h1>AI Python Code Snippets</h1>
+
+        <div class="code-block">
+            <h2>Installation</h2>
+            <p>The Python libraries used in these snippets (collections, heapq, random, re, math) are all part of the standard Python library. No separate installation is required.</p>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 1: Depth First Search</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code1')">Copy</button>
+            <pre id="code1"><code>
+graph={
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': [],
+    'G': []
+}
+
+def dfs(graph, node, visited):
+    if node not in visited:
+        print(node, end=" ")
+        visited.add(node)
+        for neighbor in graph[node]:
+            dfs(graph, neighbor, visited)
+
+visited = set()
+start_node = 'A'
+print("DFS Transversal staring from node", start_node, ":")
+dfs(graph, start_node, visited)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 2: Breadth First Search</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code2')">Copy</button>
+            <pre id="code2"><code>
+from collections import deque
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            print(node, end=" ")
+            visited.add(node)
+            queue.extend(graph[node])
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['G'],
+    'D': [],
+    'E': ['F'],
+    'F': [],
+    'G': []
+}
+
+print("BFS Transversal starting from node A:")
+bfs(graph, 'A')
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 3: Best First Search</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code3')">Copy</button>
+            <pre id="code3"><code>
+import heapq
+def best_first_search(graph, start, goal, heuristic):
+    visited = set()
+    pq = []
+    heapq.heappush(pq, (heuristic[start], start))
+
+    while pq:
+        h, current = heapq.heappop(pq)
+        print(f"Visiting: {current}")
+
+        if current == goal:
+            print("Goal reached!")
+            return True
+
+        if current not in visited:
+            visited.add(current)
+            for neighbor in graph[current]:
+                if neighbor not in visited:
+                    heapq.heappush(pq, (heuristic[neighbor], neighbor))
+
+    print("X Goal not found.")
+    return False
+
+graph = {
+    'A':['B', 'C'],
+    'B':['D', 'E'],
+    'C':['G'],
+    'D':[ ],
+    'E':['F'],
+    'F':[ ],
+    'G':[ ],
+}
+
+heuristic = {
+    'A': 5,
+    'B': 3,
+    'C': 2,
+    'D': 6,
+    'E': 1,
+    'F': 0,
+    'G': 4
+}
+best_first_search(graph, 'A', 'F', heuristic)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 4: Hill Climbing</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code4')">Copy</button>
+            <pre id="code4"><code>
+import random
+
+def f(x):
+    return -(x**2 - 4*x + 6)
+
+def hill_climb(iterations=100, step_size=0.1, start=None):
+
+    if start is None:
+        x = random.uniform(-5, 5)
+    else:
+        x = start
+
+    for i in range(iterations):
+        new_x = x + random.uniform(-step_size, step_size)
+
+        if f(new_x) > f(x):
+            x = new_x
+
+    return x, f(x)
+
+solution, value = hill_climb()
+print("Best solution found: x =", round(solution, 3))
+print("Function value f(x) =", round(value, 3))
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 5: A* Search</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code5')">Copy</button>
+            <pre id="code5"><code>
+import heapq
+def a_star_search(graph, start, goal, heuristics):
+    pq = [(0 + heuristic[start], start, [start], 0)]
+    visited = set()
+
+    while pq:
+        f, node, path, cost = heapq.heappop(pq)
+        if node in visited:
+            continue
+        visited.add(node)
+
+        if node == goal:
+            return path, cost
+
+        for neighbor, edge_cost in graph[node].items():
+            if neighbor not in visited:
+                g = cost + edge_cost
+                h = heuristic[neighbor]
+                new_f = g+ h
+                heapq.heappush(pq, (new_f, neighbor, path + [neighbor], g))
+
+    return None, float('inf')
+
+graph = {
+    'A': {'B': 2, 'C': 5},
+    'B': {'D': 4, 'E': 2},
+    'C': {'H': 2,},
+    'D': {'G': 3},
+    'E': {'G': 2, 'H': 3},
+    'H': {'G': 1},
+    'G': {},
+}
+
+heuristic = {
+    'A': 6, 'B': 4, 'C': 4,
+    'D': 3, 'E': 2, 'H': 1,
+    'G': 0
+}
+
+path, cost = a_star_search(graph, 'A', 'G', heuristic)
+
+print("Path Found:", path)
+print("Total cost:", cost)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 6: Minimax</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code6')">Copy</button>
+            <pre id="code6"><code>
+def minimax(depth, node_index, is_max, scores, target_depth):
+    """"
+    depth:current depth in tree
+    node_index: index of current node
+    is_max: True if it's maximizer's turn, False for minimizer
+    score: list of leaf node values
+    target_depth: depth of leaf nodes
+    """
+    if depth == target_depth:
+        return scores[node_index]
+
+    if is_max:
+        return max(
+        minimax(depth + 1, node_index * 2, False, scores, target_depth),
+        minimax(depth + 1, node_index * 2 + 1, False, scores, target_depth)
+        )
+    else:
+        return min(
+        minimax(depth + 1, node_index * 2, True, scores, target_depth),
+        minimax(depth + 1, node_index * 2 + 1, True, scores, target_depth)
+        )
+
+scores = [3, 5, 2, 9, 12, 5, 23, 23]
+tree_depth = 3
+best_score = minimax(0, 0, True, scores, tree_depth)
+print("The Optimal value is:", best_score)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 7: Alpha-Beta Pruning</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code7')">Copy</button>
+            <pre id="code7"><code>
+def minimax(depth, node_index, is_maximizing, scores, alpha , beta, max_depth):
+    if depth ==  max_depth:
+        return scores[node_index]
+    if is_maximizing:
+        best = float('-inf')
+        for i in range(2):
+            val = minimax(depth + 1, node_index * 2 + i, False, scores, alpha, beta, max_depth)
+            best = max(best, val)
+            alpha = max(alpha, best)
+            if beta <= alpha:
+                break
+        return best
+    else:
+        best = float('inf')
+        for i in range(2):
+            val = minimax(depth +1 , node_index * 2 + i , True , scores, alpha, beta , max_depth)
+            best = min(best, val)
+            beta = min(beta, best)
+            if beta <= alpha:
+                break
+        return best
+scores =[3,5,6,9,1,2,0,-1]
+max_depth=3
+optimal_value = minimax(0,0, True,scores, float('-inf'), float('inf'), max_depth)
+
+print("Leaf nodes:", scores)
+print("The optimal value with Alpha beta prunning is:", optimal_value)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 8: Graph Coloring</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code8')">Copy</button>
+            <pre id="code8"><code>
+def is_safe(node, graph, color, c):
+    for neighbor in graph[node]:
+        if color[neighbor] == c:
+            return False
+    return True
+
+def graph_coloring(graph, colors, color, node=0):
+    if node == len(graph):
+        return True
+
+    for c in colors:
+        if is_safe(node, graph, color, c):
+            color[node] = c
+            if graph_coloring(graph, colors, color, node + 1):
+                return True
+            color[node] = None
+
+    return False
+
+
+graph = {
+    0: [1, 2],
+    1: [0, 2, 3],
+    2: [0, 1, 3],
+    3: [1, 2],
+}
+
+colors = ["Red", "Green", "Blue"]
+color = [None] * len(graph)
+
+
+if graph_coloring(graph, colors, color):
+    print("Solution exists with coloring:")
+    for node in range(len(graph)):
+        print(f"Node {node} --> {color[node]}")
+else:
+    print("No solution exists")
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 9: Eliza Chatbot</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code9')">Copy</button>
+            <pre id="code9"><code>
+import re
+import random
+
+patterns = {
+    r"hi|hello|hey": [
+        "Hello! How are you today?",
+        "Hi there! What’s on your mind?",
+        "Hey! How can I help you?"
+    ],
+
+    r"my name is (.*)": [
+        "Nice to meet you, %1!",
+        "Hello %1! How are you doing today?"
+    ],
+
+    r"i am (.*)": [
+        "Why are you %1?",
+        "How long have you been %1?",
+        "What makes you feel %1?"
+    ],
+
+    r"i feel (.*)": [
+        "Why do you feel %1?",
+        "Do you often feel %1?",
+        "What caused you to feel %1?"
+    ],
+
+    r"i need (.*)": [
+        "Why do you need %1?",
+        "Would it really help you to get %1?",
+        "Are you sure you need %1?"
+    ],
+
+    r"(.*)": [
+        "Can you explain that in detail?",
+        "Why do you say that?",
+        "Please tell me more."
+    ]
+}
+
+def eliza_chatbot():
+    print("ELIZA: Hi! I'm Eliza, your virtual therapist. Type 'bye' to exit.")
+
+    while True:
+        user_input = input("You: ").lower()
+        matched = False
+        for pattern, responses in patterns.items():
+            match = re.match(pattern, user_input)
+
+            if match:
+                response = random.choice(responses)
+                for i in range(len(match.groups())):
+                    response = response.replace(f"%{i+1}", match.group(i+1))
+                print("ELIZA:", response)
+                matched = True
+                break
+
+        if not matched:
+            print("ELIZA: Hmm, tell me more about that.")
+        if re.search(r"bye|quit|exit", user_input):
+            print("ELIZA: Goodbye! Take care.")
+            break
+
+eliza_chatbot()
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 10: Tic-Tac-Toe AI</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code10')">Copy</button>
+            <pre id="code10"><code>
+import math
+
+def print_board(board):
+    display = [cell if cell != " " else str(i+1) for i, cell in enumerate(board)]
+    print(f"\n {display[0]} | {display[1]} | {display[2]}")
+    print("---+---+---")
+    print(f" {display[3]} | {display[4]} | {display[5]}")
+    print("---+---+---")
+    print(f" {display[6]} | {display[7]} | {display[8]}\n")
+
+def check_winner(board):
+    wins = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+    ]
+    for line in wins:
+        if board[line[0]] == board[line[1]] == board[line[2]] != " ":
+            return board[line[0]]
+    return None
+
+def is_full(board):
+    return all(cell != " " for cell in board)
+
+def get_available_moves(board):
+    return [i for i, cell in enumerate(board) if cell == " "]
+
+def minimax(board, is_maximizing):
+    winner = check_winner(board)
+    if winner == "O":
+        return 1
+    elif winner == "X":
+        return -1
+    elif is_full(board):
+        return 0
+    if is_maximizing:
+        best = -math.inf
+        for move in get_available_moves(board):
+            board[move] = "O"
+            score = minimax(board, False)
+            board[move] = " "
+            best = max(score, best)
+        return best
+    else:
+        best = math.inf
+        for move in get_available_moves(board):
+            board[move] = "X"
+            score = minimax(board, True)
+            board[move] = " "
+            best = min(score, best)
+        return best
+
+def ai_move(board):
+    best_score = -math.inf
+    best_move = None
+    for move in get_available_moves(board):
+        board[move] = "O"
+        score = minimax(board, False)
+        board[move] = " "
+        if score > best_score:
+            best_score = score
+            best_move = move
+    return best_move
+
+def play_game():
+    scores = {"X": 0, "O": 0, "Draw": 0}
+    print("🎮Welcome to Tic-Tac-Toe!")
+    while True:
+        board = [" "] * 9
+        mode = input("Choose mode: 1) Human vs Human 2) Human vs AI: ").strip()
+        while mode not in ["1", "2"]:
+            mode = input("Invalid. Choose 1 or 2: ")
+        current = "X"
+        while True:
+            print_board(board)
+            winner = check_winner(board)
+            if winner:
+                print(f"🎉Player {winner} wins!")
+                scores[winner] += 1
+                break
+            elif is_full(board):
+                print("It's a draw!")
+                scores["Draw"] += 1
+                break
+            if mode == "2" and current == "O":
+                print("🤖AI is thinking...")
+                move = ai_move(board)
+            else:
+                try:
+                    move = int(input(f"Player {current}, choose position (1-9): ")) - 1
+                    if board[move] != " " or not 0 <= move <= 8:
+                        print("❌Invalid move. Try again.")
+                        continue
+                except:
+                    print("❌Invalid input. Enter a number from 1 to 9.")
+                    continue
+            board[move] = current
+            current = "O" if current == "X" else "X"
+        print("\n📊 Scoreboard:")
+        print(f"Player X: {scores['X']}")
+        print(f"Player O: {scores['O']}")
+        print(f"Draws : {scores['Draw']}")
+        replay = input("\nPlay again? (y/n): ").lower().strip()
+        if replay != "y":
+            print("\nThanks for playing! 👋")
+            break
+
+if __name__ == "__main__":
+    play_game()
+            </code></pre>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(event, elementId) {
+            const code = document.getElementById(elementId).innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>

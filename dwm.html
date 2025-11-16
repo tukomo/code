@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DWM Code Snippets</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            overflow: auto;
+            padding: 0 20px;
+        }
+        .code-block {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #008CBA;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: #007B9E;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #555;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .home-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="home-btn">Back to Home</a>
+        <h1>DWM R Code Snippets</h1>
+
+        <div class="code-block">
+            <h2>Installation</h2>
+            <p>To run these snippets, you need to install the following R packages. You can install them all by running this command in your R console:</p>
+            <pre><code>install.packages(c("dplyr", "readr", "readxl", "writexl", "moments", "ggplot2", "caret", "pscl", "pROC", "factoextra", "class", "arules", "arulesViz"))</code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 1: Data Wrangling</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code1')">Copy</button>
+            <pre id="code1"><code>
+library(dplyr)
+
+n &lt;- as.integer(readline("Enter number of records: "))
+
+data &lt;- data.frame(Name=character(), Age=integer(), Salary=double(), stringsAsFactors=FALSE)
+
+for (i in 1:n) {
+    name &lt;- readline("Name: ")
+    age &lt;- as.integer(readline("Age: "))
+    salary &lt;- as.numeric(readline("Salary: "))
+    data &lt;- rbind(data, data.frame(Name=name, Age=age, Salary=salary))
+}
+
+data &lt;- data %&gt;%
+    filter(Age > 25) %&gt;%
+    mutate(Tax = Salary * 0.1) %&gt;%
+    rename(Monthly_Salary = Salary)
+
+print(data)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 2: Data Import and Export</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code2')">Copy</button>
+            <pre id="code2"><code>
+library(readr)
+library(readxl)
+library(writexl)
+
+csv_data &lt;- read_csv(file.choose())
+
+xls_data &lt;- read_excel(file.choose())
+
+txt_data &lt;- read_delim(file.choose(), delim = "\t")
+
+print(head(csv_data))
+print(head(xls_data))
+print(head(txt_data))
+
+write_csv(csv_data, "exported_data.csv")
+cat("\nCSV Data exported as 'exported_data.csv'\n")
+
+write_xlsx(xls_data, "exported_data.xlsx")
+cat("Excel Data exported as 'exported_data.xlsx'\n")
+
+write_delim(txt_data, "exported_data.txt", delim = "\t")
+cat("TXT Data exported as 'exported_data.txt'\n")
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 3: Descriptive Statistics</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code3')">Copy</button>
+            <pre id="code3"><code>
+library(moments)
+
+data &lt;- c(12, 15, 20, 21, 18, 30, 25, 22, 23, 27, 18, 20, 22)
+
+cat("Data:\n")
+print(data)
+
+cat("\nSummary Statistics:\n")
+print(summary(data))
+
+mean_val &lt;- mean(data)
+cat("\nMean:", mean_val, "\n")
+
+median_val &lt;- median(data)
+cat("Median:", median_val, "\n")
+
+get_mode &lt;- function(x) {
+    uniq_vals &lt;- unique(x)
+    uniq_vals[which.max(tabulate(match(x, uniq_vals)))]
+}
+mode_val &lt;- get_mode(data)
+cat("Mode:", mode_val, "\n")
+
+variance_val &lt;- var(data)
+cat("Variance:", variance_val, "\n")
+
+sd_val &lt;- sd(data)
+cat("Standard Deviation:", sd_val, "\n")
+
+range_val &lt;- range(data)
+cat("Range:", range_val, "\n")
+
+skew_val &lt;- skewness(data)
+cat("Skewness:", skew_val, "\n")
+
+kurt_val &lt;- kurtosis(data)
+cat("Kurtosis:", kurt_val, "\n")
+
+cat("\nQuantiles:\n")
+print(quantile(data))
+
+iqr_val &lt;- IQR(data)
+cat("\nInterquartile Range (IQR):", iqr_val, "\n")
+
+par(mfrow=c(1,2))
+hist(data, main="Histogram of Data", col="skyblue", border="black")
+boxplot(data, main="Boxplot of Data", col="orange")
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 4: Handling Missing Data</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code4')">Copy</button>
+            <pre id="code4"><code>
+data &lt;- data.frame(
+    Name = c("Amit", "Bina", "Chirag", "Deepa", "Esha"),
+    Age = c(25, NA, 30, NA, 28),
+    Score = c(85, 90, NA, 88, 92)
+)
+
+cat("Original Data:\n")
+print(data)
+
+cat("\nMissing Value Summary:\n")
+print(colSums(is.na(data)))
+
+cleaned_data &lt;- na.omit(data)
+cat("\nData After Removing Missing Rows:\n")
+print(cleaned_data)
+
+data$Age[is.na(data$Age)] &lt;- mean(data$Age, na.rm = TRUE)
+data$Score[is.na(data$Score)] &lt;- mean(data$Score, na.rm = TRUE)
+cat("\nData After Mean Imputation:\n")
+print(data)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 5: Data Normalization</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code5')">Copy</button>
+            <pre id="code5"><code>
+data &lt;- data.frame(
+    ID = 1:6,
+    Marks = c(45, 78, 88, 56, 92, 67),
+    Age   = c(18, 20, 19, 22, 21, 23)
+)
+
+cat("Original Dataset:\n")
+print(data)
+
+min_max_norm &lt;- function(x) {
+    return((x - min(x)) / (max(x) - min(x)))
+}
+
+data$Marks_MinMax &lt;- min_max_norm(data$Marks)
+data$Age_MinMax   &lt;- min_max_norm(data$Age)
+cat("\nDataset after Min-Max Normalization:\n")
+print(data)
+
+z_score_norm &lt;- function(x) {
+    return((x - mean(x)) / sd(x))
+}
+
+data$Marks_ZScore &lt;- z_score_norm(data$Marks)
+data$Age_ZScore   &lt;- z_score_norm(data$Age)
+cat("\nDataset after Z-Score Normalization:\n")
+print(data)
+
+decimal_scaling_norm &lt;- function(x) {
+    j &lt;- ceiling(log10(max(abs(x))))
+    return(x / (10^j))
+}
+
+data$Marks_Decimal &lt;- decimal_scaling_norm(data$Marks)
+data$Age_Decimal   &lt;- decimal_scaling_norm(data$Age)
+cat("\nDataset after Decimal Scaling Normalization:\n")
+print(data)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 6: Data Visualization</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code6')">Copy</button>
+            <pre id="code6"><code>
+# install.packages("ggplot2")
+# library(ggplot2)
+# Step 1: Clear environment
+rm(list = ls())
+# Step 2: Generate Sample Data
+# Normal distribution (mean = 50, sd = 10)
+normal_data &lt;- rnorm(1000, mean = 50, sd = 10)
+# Uniform distribution (min = 30, max = 70)
+uniform_data &lt;- runif(1000, min = 30, max = 70)
+# Step 3: Plot Histograms
+# Histogram for Normal Distribution
+hist(normal_data,
+main = "Histogram: Normal Distribution",
+xlab = "Value",
+col = "lightblue",
+border = "black")
+# Histogram for Uniform Distribution
+hist(uniform_data,
+main = "Histogram: Uniform Distribution",
+xlab = "Value",
+col = "lightgreen",
+border = "black")
+# Step 4: Plot Density Curves
+# Density plot for Normal Distribution
+plot(density(normal_data),
+main = "Density Plot: Normal Distribution",
+xlab = "Value",
+col = "blue",
+lwd = 2)
+# Density plot for Uniform Distribution
+plot(density(uniform_data),
+main = "Density Plot: Uniform Distribution",
+xlab = "Value",
+col = "green",
+lwd = 2)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 7: Simple Linear Regression</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code7')">Copy</button>
+            <pre id="code7"><code>
+# Step 1: Import necessary libraries
+# (Optional for enhanced plotting)
+library(ggplot2)
+# Step 2: Create sample dataset
+# Independent variable (X)
+x &lt;- c(10, 20, 30, 40, 50, 60, 70)
+# Dependent variable (Y)
+y &lt;- c(15, 25, 35, 45, 55, 65, 75)
+# Step 3: Combine into a data frame
+data &lt;- data.frame(x, y)
+# Step 4: Fit the linear regression model
+model &lt;- lm(y ~ x, data = data)
+# Step 5: Display model summary
+cat("----- Model Summary -----\n")
+summary(model)
+# Step 6: Visualize the regression line
+plot(data$x, data$y,
+main = "Simple Linear Regression",
+xlab = "X (Independent Variable)",
+ylab = "Y (Dependent Variable)",
+pch = 16, col = "blue")
+abline(model, col = "red", lwd = 2)
+# Step 7: Predict new values
+new_data &lt;- data.frame(x = c(80, 90))
+predictions &lt;- predict(model, new_data)
+cat("\n----- Predictions -----\n")
+print(predictions)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 8: Logistic Regression</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code8')">Copy</button>
+            <pre id="code8"><code>
+# Step 1: Install required packages (only first time)
+# Run only if not already installed
+if(!require(caret)) install.packages("caret", dependencies = TRUE)
+if(!require(pscl)) install.packages("pscl", dependencies = TRUE)
+if(!require(pROC)) install.packages("pROC", dependencies = TRUE)
+# Step 2: Load libraries
+library(caret) # For confusionMatrix
+library(pscl) # For Pseudo R-squared
+library(pROC) # For ROC curve and AUC
+# Step 3: Load built-in dataset 'mtcars'
+data(mtcars)
+head(mtcars)
+# Dependent variable: 'am' (0 = automatic, 1 = manual)
+# Convert am into a factor for classification
+mtcars$am &lt;- as.factor(mtcars$am)
+# Step 4: Fit Logistic Regression Model
+logit_model &lt;- glm(am ~ mpg + hp + wt, data = mtcars, family = binomial)
+# Step 5: Model Summary (coefficients, z-values, p-values, significance)
+cat("----- Logistic Regression Summary -----\n")
+summary(logit_model)
+# Step 6: Predict probabilities
+pred_prob &lt;- predict(logit_model, type = "response")
+# Step 7: Classify outcomes (Threshold = 0.5)
+pred_class &lt;- ifelse(pred_prob > 0.5, 1, 0)
+pred_class &lt;- factor(pred_class, levels = c(0, 1))
+# Step 8: Confusion Matrix and Accuracy
+cat("\n----- Confusion Matrix -----\n")
+conf_matrix &lt;- confusionMatrix(pred_class, mtcars$am)
+print(conf_matrix)
+cat("\nModel Accuracy:", round(conf_matrix$overall['Accuracy'] * 100, 2), "%\n")
+# Step 9: Statistical Effectiveness
+cat("\n----- Statistical Evaluation -----\n")
+cat("AIC Value:", AIC(logit_model), "\n")
+# Pseudo R-squared (McFadden’s R2)
+cat("\nPseudo R-squared (McFadden):\n")
+print(pR2(logit_model))
+# Step 10: ROC Curve and AUC
+cat("\n----- ROC Curve & AUC -----\n")
+roc_curve &lt;- roc(mtcars$am, pred_prob)
+plot(roc_curve, col = "blue", main = "ROC Curve for Logistic Regression")
+cat("AUC:", auc(roc_curve), "\n")
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 9: Principal Component Analysis</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code9')">Copy</button>
+            <pre id="code9"><code>
+# Lab Program: Principal Component Analysis (PCA)
+# Step 1: Install required libraries (run only once)
+# These libraries help with visualization and PCA interpretation
+install.packages("ggplot2") # For plotting
+install.packages("factoextra") # For PCA visualization
+# Step 2: Load the libraries
+library(ggplot2)
+library(factoextra)
+# Step 3: Load the dataset
+# Using built-in 'iris' dataset (excluding the species column)
+data &lt;- iris[, 1:4]
+# Step 4: Standardize the data
+# PCA requires scaling to give equal weight to all variables
+scaled_data &lt;- scale(data)
+# Step 5: Apply PCA
+# prcomp() performs PCA and returns components, loadings, etc.
+pca_result &lt;- prcomp(scaled_data, center = TRUE, scale. = TRUE)
+# Step 6: Display PCA summary
+# Shows standard deviation, proportion of variance, cumulative variance
+cat("----- PCA Summary -----\n")
+print(summary(pca_result))
+# Step 7: Display PCA loadings
+# Loadings indicate how much each original variable contributes to each principal component
+cat("\n----- PCA Loadings -----\n")
+print(pca_result$rotation)
+# Step 8: Display PCA scores
+# Scores are the transformed coordinates of the original data
+cat("\n----- PCA Scores (First 6 Rows) -----\n")
+print(head(pca_result$x))
+# Step 9: Scree plot
+# Visualizes the percentage of variance explained by each component
+fviz_eig(pca_result, addlabels = TRUE, ylim = c(0, 100))
+# Step 10: PCA biplot
+# Combines scores and loadings in one plot
+fviz_pca_biplot(pca_result, label = "var", habillage = iris$Species,
+addEllipses = TRUE, ellipse.level = 0.95,
+palette = "jco", title = "PCA - Iris Dataset")
+# Step 11: Cumulative variance explained
+# Helps decide how many components to retain
+cat("\n----- Cumulative Variance Explained -----\n")
+cum_var &lt;- cumsum(pca_result$sdev^2 / sum(pca_result$sdev^2))
+print(round(cum_var, 4))
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 10: K-Nearest Neighbors</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code10')">Copy</button>
+            <pre id="code10"><code>
+# Install required libraries (run once)
+install.packages("class") # For KNN algorithm
+install.packages("caret") # For confusion matrix and accuracy
+# Step 1: Load libraries
+library(class)
+library(caret)
+library(ggplot2)
+# Step 2: Load and prepare dataset
+# Using built-in 'iris' dataset
+data &lt;- iris
+# Step 3: Normalize numeric features
+normalize &lt;- function(x) {
+return((x - min(x)) / (max(x) - min(x)))
+}
+data_norm &lt;- as.data.frame(lapply(data[, 1:4], normalize))
+# Step 4: Split data into training and testing sets
+set.seed(123) # For reproducibility
+train_index &lt;- sample(1:nrow(data), 0.7 * nrow(data))
+train_data &lt;- data_norm[train_index, ]
+test_data &lt;- data_norm[-train_index, ]
+train_labels &lt;- data[train_index, 5]
+test_labels &lt;- data[-train_index, 5]
+# Step 5: Apply KNN algorithm
+k &lt;- 3 # Number of neighbors
+predicted_labels &lt;- knn(train = train_data, test = test_data,
+cl = train_labels, k = k)
+# Step 6: Evaluate model performance
+cat("----- Confusion Matrix -----\n")
+conf_matrix &lt;- confusionMatrix(predicted_labels, test_labels)
+print(conf_matrix)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 11: Apriori Algorithm</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code11')">Copy</button>
+            <pre id="code11"><code>
+# Market Basket Analysis using Apriori Algorithm
+# Install required libraries (run once)
+install.packages("arules") # For association rule mining
+install.packages("arulesViz") # For visualizing rules
+# Step 1: Load required libraries
+library(arules)
+library(arulesViz)
+# Step 2: Load sample transaction data
+# Using built-in 'Groceries' dataset from arules package
+data("Groceries")
+# Step 3: Inspect the dataset
+cat("----- Sample Transactions -----\n")
+inspect(Groceries[1:5])
+# Step 4: Apply Apriori algorithm
+# Set minimum support and confidence thresholds
+rules &lt;- apriori(Groceries, parameter = list(supp = 0.01, conf = 0.5))
+# Step 5: Summary of rules
+cat("\n----- Summary of Rules -----\n")
+summary(rules)
+# Step 6: Inspect top rules by lift
+cat("\n----- Top 5 Rules by Lift -----\n")
+inspect(sort(rules, by = "lift")[1:5])
+# Step 7: Visualize rules
+# Plot rules using different methods
+plot(rules, method = "scatterplot", shading = "lift")
+plot(rules, method = "grouped")
+plot(rules, method = "graph", engine = "htmlwidget")
+# Step 8: Filter strong rules
+# Example: rules with 'whole milk' in the RHS
+milk_rules &lt;- subset(rules, rhs %in% "whole milk" & lift > 1.2)
+cat("\n----- Rules Leading to Whole Milk -----\n")
+inspect(milk_rules)
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 12: K-Means Clustering</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code12')">Copy</button>
+            <pre id="code12"><code>
+# Step 1: Install required libraries (run once if not installed)
+install.packages("ggplot2") # For plotting
+install.packages("factoextra") # For cluster visualization
+# Step 2: Load libraries
+library(ggplot2)
+library(factoextra)
+# Step 3: Load dataset
+# Using built-in 'iris' dataset (excluding species column)
+data &lt;- iris[, 1:4]
+# Step 4: Standardize the data
+# Scaling ensures equal weight for all features
+scaled_data &lt;- scale(data)
+# Step 5: Determine optimal number of clusters using Elbow Method
+fviz_nbclust(scaled_data, kmeans, method = "wss") +
+labs(title = "Elbow Method for Optimal Clusters")
+# Step 6: Apply K-Means algorithm
+set.seed(123) # For reproducibility
+k &lt;- 3 # Number of clusters
+kmeans_result &lt;- kmeans(scaled_data, centers = k, nstart = 25)
+# Step 7: Print clustering result
+cat("----- K-Means Clustering Result -----\n")
+print(kmeans_result)
+# Step 8: Add cluster labels to data
+clustered_data &lt;- data.frame(scaled_data, Cluster = factor(kmeans_result$cluster))
+# Step 9: Visualize clusters
+fviz_cluster(kmeans_result, data = scaled_data,
+palette = "jco", geom = "point",
+ellipse.type = "convex", ggtheme = theme_minimal(),
+main = "K-Means Clustering Visualization")
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 13: Outlier Detection and Removal</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code13')">Copy</button>
+            <pre id="code13"><code>
+# Program: Examine Data and Remove Outliers
+# Step 1: Install & Load necessary library
+# (install only once, comment out after first run)
+install.packages("dplyr")
+library(dplyr)
+# Step 2: Create a sample dataset
+data &lt;- data.frame(
+ID = 1:10,
+Marks = c(45, 50, 55, 60, 62, 65, 70, 75, 200, 80) # Notice 200 is an outlier
+)
+# Step 3: Display the dataset
+print("Original Dataset:")
+print(data)
+# Step 4: Find summary statistics
+print("Summary of Data:")
+summary(data$Marks)
+# Step 5: Detect Outliers using IQR method
+Q1 &lt;- quantile(data$Marks, 0.25) # 25th percentile
+Q3 &lt;- quantile(data$Marks, 0.75) # 75th percentile
+IQR_value &lt;- Q3 - Q1 # Interquartile Range
+# Define outlier boundaries
+Lower_Bound &lt;- Q1 - 1.5 * IQR_value
+Upper_Bound &lt;- Q3 + 1.5 * IQR_value
+print(paste("Lower Bound:", Lower_Bound))
+print(paste("Upper Bound:", Upper_Bound))
+# Step 6: Remove outliers
+clean_data &lt;- filter(data, Marks >= Lower_Bound & Marks <= Upper_Bound)
+# Step 7: Display Cleaned Data
+print("Dataset after Removing Outliers:")
+print(clean_data)
+            </code></pre>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(event, elementId) {
+            const code = document.getElementById(elementId).innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>
