@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBMS Code Snippets</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            overflow: auto;
+            padding: 0 20px;
+        }
+        .code-block {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #9B59B6; /* Purple for DBMS section */
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: #8E44AD;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #555;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .home-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="home-btn">Back to Home</a>
+        <h1>DBMS PL/SQL Code Snippets</h1>
+
+        <div class="code-block">
+            <h2>Program 1: Addition of Two Numbers</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code1')">Copy</button>
+            <pre id="code1"><code>
+declare
+    a number;
+    b number;
+    c number;
+begin
+   a:=&a;
+   b:=&b;
+   c:=a + b;
+   dbms_output.put_line('addition of two numbers=' ||c);
+end;
+/
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 2: Largest of Three Numbers</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code2')">Copy</button>
+            <pre id="code2"><code>
+declare
+    a number;
+    b number;
+    c number;
+begin
+    a:=&a;
+    b:=&b;
+    c:=&c;
+if (a>b and a>c) then
+       dbms_output.put_line('a is largest' || a);
+elsif (b>a and b>c) then
+       dbms_output.put_line('b is largest' || b);
+else
+      dbms_output.put_line('c is the largest' ||c);
+end if;
+end;
+/
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 3: Stored Procedure for Max and Min</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code3')">Copy</button>
+            <pre id="code3"><code>
+create or replace procedure maxmin(a in number,b in number,c in number)
+is
+max number(6);
+min number(6);
+begin
+if (a>b and a>c) then
+       dbms_output.put_line('Maximum  number is' || a);
+elsif (b>a and b>c) then
+       dbms_output.put_line('Maximum number is' || b);
+else
+      dbms_output.put_line('Maximum number is'||c);
+end if;
+
+if (a<b and a<c) then
+       dbms_output.put_line('Minimum  number is'|| a);
+elsif (b<a and b<c) then
+       dbms_output.put_line('Minimum number is'|| b);
+else
+      dbms_output.put_line('Minimum number is'||c);
+end if;
+end;
+/
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 4: Stored Procedure for Sum of First 10 Natural Numbers</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code4')">Copy</button>
+            <pre id="code4"><code>
+create or replace procedure sumnum is
+i number;
+s number:=0;
+begin
+for i in 1..10
+loop
+s:=s+i;
+end loop;
+dbms_output.put_line('sum of first 10 numbers are: '||s);
+end;
+/
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 5: PL/SQL Functions for Arithmetic Operations</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code5')">Copy</button>
+            <pre id="code5"><code>
+declare
+x number;
+y number;
+function add(a in number,b in number) return number
+is
+d number;
+begin
+d:=a+b;
+return d;
+end;
+function subtract(e in number,f in number) return number
+is
+g number;
+begin
+g:=e-f;
+return g;
+end;
+function multiply (h in number,i in number) return number
+is
+j number;
+begin
+j:=h*i;
+return j;
+end;
+function divide (k in number,l in number) return number
+is
+m number;
+begin
+m:=k/l;
+return m;
+end;
+begin
+x:=&x;
+y:=&y;
+dbms_output.put_line('addition of two numbers:'||add(x,y));
+dbms_output.put_line('Subtraction of two numbers:'||subtract(x,y));
+dbms_output.put_line('Multiplication of two numbers:'||multiply(x,y));
+dbms_output.put_line('Division of two numbers:'||divide(x,y));
+end;
+/
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 6: Employee Table, Trigger, and Cursor</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code6')">Copy</button>
+            <pre id="code6"><code>
+-- Table Creation
+create table employee1(emp_id number(3), emp_name varchar2(20), emp_dob date,
+emp_sal number(7), emp_grade  char(1), emp_dno number(2));
+
+create table employee_log1(emp_id number(3), emp_name varchar2(20), emp_dob date,
+emp_pre_grade char(1), emp_pre_sal number(7));
+
+-- Record Insertion
+insert into employee1 values(101,'Allen','10-feb-1992',40000,'C',11);
+insert into employee1 values(102,'Banu','21-oct-1996',60000,'B',12);
+insert into employee1 values(103,'Deepa','21-Mar-1990',60000,'B',12);
+insert into employee1 values(104,’David’,’23-Mar-1992’,50000,’B’,13);
+
+-- i) PL/SQL to insert row
+declare
+   emp_id1 employee1.emp_id%type;
+   emp_name1 employee1.emp_name%type;
+   emp_dob1 employee1.emp_dob%type;
+   emp_sal1 employee1.emp_sal%type;
+   emp_grade1 employee1.emp_grade%type;
+   emp_dno1 employee1.emp_dno%type;
+   n number(2);
+   i number(2);
+
+begin
+  dbms_output.put_line('enter number of records to be inserted');
+  n := &n;
+  for i in 1 .. n
+  loop
+ insert into employee1
+values(&emp_id1,'&emp_name1','&emp_dob1',&emp_sal1,'&emp_grade1',&emp_dno1);
+ dbms_output.put_line(i || ' row is inserted');
+  end loop;
+  end;
+/
+
+-- ii) PL/SQL triggers
+create or replace trigger trsal
+  before update of emp_sal
+  on employee1
+  for each row
+
+begin
+   insert into employee_log1 values(:old.emp_id, :old.emp_name,:old.emp_dob,:old.emp_grade,
+:old.emp_sal);
+   dbms_output.put_line('previous values are updated in employee log file successfully');
+end;
+/
+
+create or replace trigger trgrade
+  before update of emp_grade
+  on employee1
+  for each row
+begin
+   insert into employee_log1 values(:old.emp_id,:old.emp_name,:old.emp_dob,:old.emp_grade,
+:old.emp_sal);
+   dbms_output.put_line('previous values are updated in employee log file successfully');
+end;
+/
+
+-- iii) Cursor to update salary
+   declare
+     cursor c1 is select * from employee1 where emp_grade='C' for update of emp_sal;
+     r1 employee1%rowtype;
+     begin
+       open c1;
+       loop
+       fetch c1 into r1;
+        exit when c1%notfound;
+        update employee1 set emp_sal= r1.emp_sal + r1.emp_sal* 0.2 where current of c1 ;
+       end loop;
+       dbms_output.put_line(c1%rowcount);
+       close c1;
+  end;
+/
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 7: Student Table Operations</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code7')">Copy</button>
+            <pre id="code7"><code>
+-- Create Table student
+Create table student10 (Regno number, Name varchar(100), DOB date, marks number);
+
+-- Remove the existing attribute marks from table
+Alter table student10 drop column marks;
+
+-- Change the data type of regno from integer to string.
+Alter table student10 modify regno varchar(10);
+
+-- Add a new attribute phone no to the existing table.
+Alter table student10 add phone_no number(10);
+
+-- Enter 5 tuples into the table.
+insert into student10 values ('001', 'Kushi', '21-Oct-1998', 7894001001);
+insert into student10 values ('005', 'Hema', '11-Jun-1990', 8015769810);
+insert into student10 values ('002', 'hashim', '17-May-2000', 805353391);
+insert into student10 values ('004', 'Binga', '11-Oct-2003', 9208345678);
+insert into student10 values ('005', 'Rithi', '11-mar-2002', 3019467891);
+
+-- Display all the tuples in student table.
+select * from student10;
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 8: Library Table Operations</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code8')">Copy</button>
+            <pre id="code8"><code>
+-- Create table Library10
+Create table Library10 (book_id number(10), title varchar(20), author varchar(10), publisher varchar(10), year_pub number(10), price number(10));
+
+-- Insert data into Library10
+Insert into Library10 values ('11201', 'DBMS', 'Ashwini', 'sky word', 2005, 260.00);
+Insert into Library10 values ('11202', 'c', 'Balaguru', 'pearson', 200, 860.00);
+Insert into library10 values ('11203', 'MFCS', 'Kenneth', 'kamala', 2001, 1460.00);
+Insert into library10 values ('11204', 'asc', 'robert', 'wilson', 1988, 60.00);
+Insert into library10 values ('11205', 'Lang', 'Kuempu', 'tejashri', 1968, 34.00);
+
+-- Select all data
+Select * from library10;
+
+-- Select distinct publishers
+Select distinct (publisher) from library10;
+
+-- Select all data ordered by title
+Select * from Library10 order by title;
+
+-- Select books with price between 150 & 300
+Select * from Library10 where price between 150 & 300;
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 9: Employee Salary Operations</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code9')">Copy</button>
+            <pre id="code9"><code>
+-- Create table emp_salary
+create table emp_salary (emp_code number (10), emp_name varchar (15), dob date, department varchar (15), salary number (10, 2));
+
+-- Insert data into emp_salary
+insert into emp_salary values (1001, 'Kaithika', '16-Sep-2000', 'Computer', 55000);
+insert into emp_salary values (1002, 'Kushi', '21-Jul-1999', 'Finance', 48000);
+insert into emp_salary values (1003, 'Rinya', '15-Nov-1999', 'Admin', 40000);
+insert into emp_salary values (1004, 'Anju', '20-Sep-1996', 'HR', 52000);
+insert into emp_salary values (1005, 'Chand', '11-Apr-1995', 'Finance', 43000);
+
+-- Group by department and count employees
+Select Department, count(*) as numemployees from emp_salary group by department;
+
+-- Select sum of all salaries
+Select sum(salary) from emp_salary;
+
+-- Select maximum salary
+Select max(salary) from emp_salary;
+
+-- Update salary for the computer department
+Update Emp_salary set salary = salary + 1000 where department = 'computer';
+
+-- Select all data
+Select * from emp_salary;
+            </code></pre>
+        </div>
+
+        <div class="code-block">
+            <h2>Program 10: Accident Database</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code10')">Copy</button>
+            <pre id="code10"><code>
+-- Create tables
+create table person100(driverid varchar(10) primary key, name varchar(10), address varchar(10));
+create table cars100 (regno varchar(10) primary key, model varchar(10), year number(10));
+create table owns100(driverid references person100(driverid), regno references cars100(regno));
+create table accident100(reportno number(10) primary key, accdate date, location varchar(10));
+create table participated100(driverid varchar(10), regno varchar(10), reportno number(10), damage_amount number(10));
+
+
+-- Insert data into person100
+insert into person100 values ('KA05A23', 'HARISH', 'KR PUR');
+insert into person100 values ('KA05A24', 'KUMAR', 'TIN FACTORY');
+insert into person100 values ('KA05A25', 'HEMU', 'OMBR');
+insert into person100 values ('KA05A26', 'SUMITHRA', 'Lakeside');
+insert into person100 values ('KA05A27', 'HARSHA', 'HRBR');
+
+-- Insert data into cars100
+insert into cars100 values ('2020', 'SUZUKI', '2001');
+insert into cars100 values ('2001', 'BENZ', '2002');
+insert into cars100 values ('2022', 'LAMBORGINI', '2003');
+insert into cars100 values ('2023', 'AUDI', '2002');
+insert into cars100 values ('2024', 'TOYOTA', '2004');
+
+-- Insert data into owns100
+insert into owns100 values ('KA05A23', '2020');
+insert into owns100 values ('KA05A27', '2001');
+insert into owns100 values ('KA05A25', '2022');
+insert into owns100 values ('KA05A26', '2003');
+insert into owns100 values ('KA05A04', '10004');
+
+-- Insert data into accident100
+insert into accident100 values ('0001', '18-Jun-2001', 'Ring road');
+insert into accident100 values ('0002', '11-Feb-2002', 'mg road');
+insert into accident100 values ('0003', '15-Mar-2003', 'KR 29 - Punam signal');
+insert into accident100 values ('0004', '10-Dec-2004', 'MH signal');
+insert into accident100 values ('0005', '27-Sep-2000', 'TC Palya');
+
+-- Insert data into participated100
+insert into participated100 values ('KA05A23', '2000', '0001', '312450000');
+insert into participated100 values ('KA05A04', '2001', '0000', '100000');
+insert into participated100 values ('KA05A25', '2022', '0003', '200000');
+insert into participated100 values ('KA05A26', '2023', '0004', '150000');
+insert into participated100 values ('KA05A04', '2024', '0005', '50000');
+
+-- Update damage amount
+update participated100 set damage_amount = 25000 where driverid = 'KA05A23' and reportno = 0001;
+
+-- Count accidents in 2002
+Select count(*) AS "NUMBER OF ACCIDENTS" from accident100 where to_char(accdate, 'YYYY') = '2002';
+
+-- Count accidents for Toyota cars
+Select count(*) As "Number of accidents" from CARS100 C, participated100 P where C.Regno=P.Regno and model = 'TOYOTA';
+
+-- Select all data from tables
+select * from person100;
+select * from cars100;
+select * from owns100;
+select * from accident100;
+select * from participated100;
+            </code></pre>
+        </div>
+
+    </div>
+
+    <script>
+        function copyToClipboard(event, elementId) {
+            const code = document.getElementById(elementId).innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>
