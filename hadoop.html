@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadoop Code Snippets</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            overflow: auto;
+            padding: 0 20px;
+        }
+        .code-block {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e67e22; /* Orange for Hadoop section */
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: #d35400;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #555;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .home-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="home-btn">Back to Home</a>
+        <h1>Hadoop Code Snippets</h1>
+
+        <div class="code-block">
+            <h2>PROGRAM 2: Word Frequency (WordCount)</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code2')">Copy</button>
+            <pre id="code2">
+Setup: start-dfs.sh, start-yarn.sh, jps, mkdir hadoop_lab, hdfs dfs -mkdir -p /wordfreq/input
+
+Input File (input.txt):
+hadoop is big data framework
+hadoop processes big data
+big data is powerful
+
+Upload: hdfs dfs -put input.txt /wordfreq/input
+
+Java File (WordCount.java):
+import java.io.IOException;
+import java.util.StringTokenizer;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class WordCount {
+    public static class MapperClass extends Mapper&lt;Object, Text, Text, IntWritable&gt; {
+        private final static IntWritable one = new IntWritable(1);
+        private Text word = new Text();
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            StringTokenizer itr = new StringTokenizer(value.toString());
+            while (itr.hasMoreTokens()) {
+                word.set(itr.nextToken());
+                context.write(word, one);
+            }
+        }
+    }
+    public static class ReducerClass extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; {
+        public void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int sum = 0;
+            for (IntWritable val : values) {
+                sum += val.get();
+            }
+            context.write(key, new IntWritable(sum));
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "word count");
+        job.setJarByClass(WordCount.class);
+        job.setMapperClass(MapperClass.class);
+        job.setCombinerClass(ReducerClass.class);
+        job.setReducerClass(ReducerClass.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+
+Compile/Run: javac -classpath $(hadoop classpath) -d . WordCount.java, jar -cvf wordcount.jar *, hadoop jar wordcount.jar WordCount /wordfreq/input /wordfreq/output, hdfs dfs -cat /wordfreq/output/part-r-00000
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 4: Student Grades</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code4')">Copy</button>
+            <pre id="code4">
+Setup: start-dfs.sh, start-yarn.sh, jps, mkdir grade_lab, cd grade_lab, hdfs dfs -mkdir -p /grade/input
+
+Input File (students.txt):
+Ravi,85
+Anita,72
+Rahul,60
+Priya,55
+Kiran,90
+
+Upload: hdfs dfs -put students.txt /grade/input
+
+Java File (GradeMR.java):
+import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class GradeMR {
+    public static class GradeMapper extends Mapper&lt;Object, Text, Text, Text&gt; {
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            String line = value.toString();
+            String[] parts = line.split(",");
+            String name = parts[0];
+            int marks = Integer.parseInt(parts[1]);
+            String grade;
+            if (marks >= 80) grade = "A";
+            else if (marks >= 60) grade = "B";
+            else if (marks >= 50) grade = "C";
+            else grade = "D";
+            context.write(new Text(name), new Text(grade));
+        }
+    }
+    public static class GradeReducer extends Reducer&lt;Text, Text, Text, Text&gt; {
+        public void reduce(Text key, Iterable&lt;Text&gt; values, Context context) throws IOException, InterruptedException {
+            for (Text val : values) {
+                context.write(key, val);
+            }
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "Student Grade");
+        job.setJarByClass(GradeMR.class);
+        job.setMapperClass(GradeMapper.class);
+        job.setReducerClass(GradeReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+
+Compile/Run: javac -classpath $(hadoop classpath) -d . GradeMR.java, jar -cvf grade.jar *, hadoop jar grade.jar GradeMR /grade/input /grade/output, hdfs dfs -cat /grade/output/part-r-00000
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 5: Matrix Multiplication</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code5')">Copy</button>
+            <pre id="code5">
+Setup: start-dfs.sh, start-yarn.sh, jps, mkdir matrix_lab, cd matrix_lab, hdfs dfs -mkdir -p /matrix/input
+
+Input File (matrix.txt):
+A,0,0,1
+A,0,1,2
+A,1,0,3
+A,1,1,4
+B,0,0,5
+B,0,1,6
+B,1,0,7
+B,1,1,8
+
+Upload: hdfs dfs -put matrix.txt /matrix/input
+
+Java File (MatrixMultiply.java):
+import java.io.IOException;
+import java.util.*;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class MatrixMultiply {
+    public static class MatrixMapper extends Mapper&lt;Object, Text, Text, Text&gt; {
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            String[] parts = value.toString().split(",");
+            String matrix = parts[0];
+            int row = Integer.parseInt(parts[1]);
+            int col = Integer.parseInt(parts[2]);
+            String val = parts[3];
+            if (matrix.equals("A")) {
+                for (int i = 0; i &lt; 2; i++) {
+                    context.write(new Text(row + "," + i), new Text("A," + col + "," + val));
+                }
+            } else {
+                for (int i = 0; i &lt; 2; i++) {
+                    context.write(new Text(i + "," + col), new Text("B," + row + "," + val));
+                }
+            }
+        }
+    }
+    public static class MatrixReducer extends Reducer&lt;Text, Text, Text, Text&gt; {
+        public void reduce(Text key, Iterable&lt;Text&gt; values, Context context) throws IOException, InterruptedException {
+            Map&lt;Integer, Integer&gt; mapA = new HashMap&lt;&gt;();
+            Map&lt;Integer, Integer&gt; mapB = new HashMap&lt;&gt;();
+            for (Text val : values) {
+                String[] parts = val.toString().split(",");
+                if (parts[0].equals("A")) {
+                    mapA.put(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                } else {
+                    mapB.put(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                }
+            }
+            int result = 0;
+            for (int k : mapA.keySet()) {
+                if (mapB.containsKey(k)) {
+                    result += mapA.get(k) * mapB.get(k);
+                }
+            }
+            context.write(key, new Text(String.valueOf(result)));
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "Matrix Multiplication");
+        job.setJarByClass(MatrixMultiply.class);
+        job.setMapperClass(MatrixMapper.class);
+        job.setReducerClass(MatrixReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+
+Compile/Run: javac -classpath $(hadoop classpath) -d . MatrixMultiply.java, jar -cvf matrix.jar *, hadoop jar matrix.jar MatrixMultiply /matrix/input /matrix/output, hdfs dfs -cat /matrix/output/part-r-00000
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 6: Maximum Electrical Consumption</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code6')">Copy</button>
+            <pre id="code6">
+Setup: start-dfs.sh, start-yarn.sh, jps, mkdir electricity_lab, cd electricity_lab, hdfs dfs -mkdir -p /electricity/input
+
+Input File (electricity.txt):
+2019,Jan,200
+2019,Feb,180
+2019,Mar,220
+2020,Jan,300
+2020,Feb,250
+2020,Mar,275
+2021,Jan,400
+2021,Feb,350
+
+Upload: hdfs dfs -put electricity.txt /electricity/input
+
+Java File (MaxElectricity.java):
+import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class MaxElectricity {
+    public static class ElectricityMapper extends Mapper&lt;Object, Text, Text, IntWritable&gt; {
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            String line = value.toString();
+            String[] parts = line.split(",");
+            String year = parts[0];
+            int consumption = Integer.parseInt(parts[2]);
+            context.write(new Text(year), new IntWritable(consumption));
+        }
+    }
+    public static class ElectricityReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; {
+        public void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int max = Integer.MIN_VALUE;
+            for (IntWritable val : values) {
+                if (val.get() > max) {
+                    max = val.get();
+                }
+            }
+            context.write(key, new IntWritable(max));
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "Max Electricity Consumption");
+        job.setJarByClass(MaxElectricity.class);
+        job.setMapperClass(ElectricityMapper.class);
+        job.setReducerClass(ElectricityReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+
+Compile/Run: javac -classpath $(hadoop classpath) -d . MaxElectricity.java, jar -cvf electricity.jar *, hadoop jar electricity.jar MaxElectricity /electricity/input /electricity/output, hdfs dfs -cat /electricity/output/part-r-00000
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 7: Weather Analysis (Sunny or Cool)</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code7')">Copy</button>
+            <pre id="code7">
+Setup: start-dfs.sh, start-yarn.sh, jps, mkdir weather_lab, cd weather_lab, hdfs dfs -mkdir -p /weather/input
+
+Input File (weather.txt):
+01-01-2023,35
+02-01-2023,22
+03-01-2023,31
+04-01-2023,18
+05-01-2023,40
+
+Upload: hdfs dfs -put weather.txt /weather/input
+
+Java File (WeatherAnalysis.java):
+import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class WeatherAnalysis {
+    public static class WeatherMapper extends Mapper&lt;Object, Text, Text, Text&gt; {
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            String line = value.toString();
+            String[] parts = line.split(",");
+            String date = parts[0];
+            int temperature = Integer.parseInt(parts[1]);
+            if (temperature >= 30) {
+                context.write(new Text(date), new Text("Sunny"));
+            } else {
+                context.write(new Text(date), new Text("Cool"));
+            }
+        }
+    }
+    public static class WeatherReducer extends Reducer&lt;Text, Text, Text, Text&gt; {
+        public void reduce(Text key, Iterable&lt;Text&gt; values, Context context) throws IOException, InterruptedException {
+            for (Text val : values) {
+                context.write(key, val);
+            }
+        }
+    }
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "Weather Analysis");
+        job.setJarByClass(WeatherAnalysis.class);
+        job.setMapperClass(WeatherMapper.class);
+        job.setReducerClass(WeatherReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+
+Compile/Run: javac -classpath $(hadoop classpath) -d . WeatherAnalysis.java, jar -cvf weather.jar *, hadoop jar weather.jar WeatherAnalysis /weather/input /weather/output, hdfs dfs -cat /weather/output/part-r-00000
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(event, elementId) {
+            const code = document.getElementById(elementId).innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>

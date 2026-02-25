@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Code Snippets</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            overflow: auto;
+            padding: 0 20px;
+        }
+        .code-block {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        pre {
+            background: #eee;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50; /* Green for Android section */
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: #45a049;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background: #555;
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .home-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="home-btn">Back to Home</a>
+        <h1>Android Code Snippets</h1>
+
+        <div class="code-block">
+            <h2>PROGRAM 1</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code1')">Copy</button>
+            <pre id="code1">
+XML CODE:
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center_horizontal"&gt;
+    &lt;TextView
+        android:id="@+id/welcomeMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Android Application"
+        android:textSize="20sp"
+        android:paddingBottom="20dp" /&gt;
+    &lt;EditText
+        android:id="@+id/studentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Student Name" /&gt;
+    &lt;Button
+        android:id="@+id/submitBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click Me"
+        android:layout_marginTop="20dp" /&gt;
+&lt;/LinearLayout&gt;
+
+JAVA:
+package com.example.lab_app;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        TextView welcomeMsg = findViewById(R.id.welcomeMsg);
+        EditText studentName = findViewById(R.id.studentName);
+        Button submitBtn = findViewById(R.id.submitBtn);
+
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = studentName.getText().toString();
+                String message = "Welcome to Android Application " + name;
+                // Update the TextView with concatenated message
+                welcomeMsg.setText(message);
+            }
+        });
+    }
+}
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 2</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code2')">Copy</button>
+            <pre id="code2">
+XML CODE:
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"&gt;
+
+    &lt;TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" /&gt;
+&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;
+
+JAVA:
+package com.example.lab02;
+import android.os.Bundle;
+import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Exit")
+                        .setMessage("Do you really want to close this application?")
+                        .setPositiveButton("Yes", (dialog, which) -&gt; finish())
+                        .setNegativeButton("No", null)
+                        .show();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    // Task: Display Alert when activity starts
+    @Override
+    protected void onStart() {
+        super.onStart();
+        new AlertDialog.Builder(this)
+                .setTitle("Terms & Conditions")
+                .setMessage("By Clicking Ok you Accept T&C. Click Cancel to quit Application.")
+                .setPositiveButton("Ok", (dialog, which) -&gt; Toast.makeText(MainActivity.this, "Accepted", Toast.LENGTH_SHORT).show())
+                .setNegativeButton("Cancel", (dialog, which) -&gt; finish())
+                .show();
+    }
+}
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 3</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code3')">Copy</button>
+            <pre id="code3">
+XML CODE:
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"&gt;
+
+    &lt;Button
+        android:id="@+id/downloadBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download" /&gt;
+
+&lt;/LinearLayout&gt;
+
+JAVA:
+package com.example.lab03;
+
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ProgressDialog progressDialog;
+    private int progressStatus = 0;
+    private Handler handler = new Handler();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Button downloadBtn = findViewById(R.id.downloadBtn);
+
+        downloadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDownloadProgress();
+            }
+        });
+    }
+
+    private void showDownloadProgress() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Downloading File");
+        progressDialog.setMessage("Please wait...");
+        // Set the style to Horizontal to show the percentage bar
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax(100);
+        progressDialog.setCancelable(false); // Prevents closing by tapping outside
+        progressStatus = 0;
+        progressDialog.show();
+
+        // Start a background thread to simulate the download
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (progressStatus &lt; 100) {
+                    progressStatus += 1; // Increase percentage
+
+                    // Update the progress bar on the UI thread
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.setProgress(progressStatus);
+                        }
+                    });
+
+                    try {
+                        // Sleep for 50 milliseconds to simulate download time
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Close the dialog when progress reaches 100%
+                if (progressStatus &gt;= 100) {
+                    progressDialog.dismiss();
+                }
+            }
+        }).start();
+    }
+}
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 4</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code4')">Copy</button>
+            <pre id="code4">
+XML CODE:
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"&gt;
+
+    &lt;TextView
+        android:id="@+id/urlTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="http://www.cmr.edu.in/"
+        android:textSize="18sp"
+        android:textColor="#0000FF"
+        android:paddingBottom="20dp" /&gt;
+
+    &lt;Button
+        android:id="@+id/openBrowserBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Website" /&gt;
+
+&lt;/LinearLayout&gt;
+
+JAVA:
+package com.example.lab04;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        TextView urlTextView = findViewById(R.id.urlTextView);
+        Button openBrowserBtn = findViewById(R.id.openBrowserBtn);
+
+        openBrowserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the text from the TextView
+                String url = urlTextView.getText().toString();
+
+                // Create an Implicit Intent
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                // Parse the string into a URI and set it to the intent
+                intent.setData(Uri.parse(url));
+
+                // Start the activity (Android will ask which browser to use)
+                startActivity(intent);
+            }
+        });
+    }
+}
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 5</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code5')">Copy</button>
+            <pre id="code5">
+XML CODE:
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"&gt;
+
+    &lt;TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Orientation Status"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold" /&gt;
+
+&lt;/LinearLayout&gt;
+
+JAVA CODE:
+package com.example.lab05;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private LinearLayout rootLayout;
+    private TextView statusText;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        rootLayout = findViewById(R.id.rootLayout);
+        statusText = findViewById(R.id.statusText);
+
+        // Check orientation on first load
+        updateUI(getResources().getConfiguration().orientation);
+    }
+
+    // This method is called automatically when the screen rotates
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateUI(newConfig.orientation);
+    }
+
+    private void updateUI(int orientation) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            rootLayout.setBackgroundColor(Color.RED);
+            statusText.setText("You are in Landscape mode – Background color is Red");
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rootLayout.setBackgroundColor(Color.GREEN);
+            statusText.setText("You are in Portrait mode – Background color is green");
+        }
+    }
+}
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h2>PROGRAM 6</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code6')">Copy</button>
+            <pre id="code6">
+XML CODE:
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center_horizontal"&gt;
+
+    &lt;TextView
+        android:id="@+id/dateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date of Birth: Not Set"
+        android:textSize="18sp"
+        android:padding="10dp"/&gt;
+
+    &lt;Button
+        android:id="@+id/dateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick a Date of Birth" /&gt;
+
+    &lt;TextView
+        android:id="@+id/timeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time of Birth: Not Set"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:layout_marginTop="30dp"/&gt;
+
+    &lt;Button
+        android:id="@+id/timeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick Time of Birth" /&gt;
+
+&lt;/LinearLayout&gt;
+
+JAVA CODE:
+package com.example.lab06;
+
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity {
+
+    private TextView dateLabel, timeLabel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        dateLabel = findViewById(R.id.dateLabel);
+        timeLabel = findViewById(R.id.timeLabel);
+        Button dateBtn = findViewById(R.id.dateBtn);
+        Button timeBtn = findViewById(R.id.timeBtn);
+
+        // Get Current Date and Time
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        // Date Picker Logic
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                // Month is 0-indexed, so add 1
+                                dateLabel.setText("Date of Birth: " + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                            }
+                        }, year, month, day);
+                datePickerDialog.show();
+            }
+        });
+
+        // Time Picker Logic
+        timeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfHour) {
+                                timeLabel.setText("Time of Birth: " + hourOfDay + ":" + String.format("%02d", minuteOfHour));
+                            }
+                        }, hour, minute, true); // 'true' for 24-hour format
+                timePickerDialog.show();
+            }
+        });
+    }
+}
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(event, elementId) {
+            const code = document.getElementById(elementId).innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>
