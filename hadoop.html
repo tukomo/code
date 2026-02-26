@@ -139,6 +139,74 @@ Compile/Run: javac -classpath $(hadoop classpath) -d . WordCount.java, jar -cvf 
         </div>
 
         <div class="code-block">
+            <h2>PROGRAM 3: Find Maximum Temperature</h2>
+            <button class="copy-btn" onclick="copyToClipboard(event, 'code3')">Copy</button>
+            <pre id="code3">
+Setup: start-dfs.sh, start-yarn.sh, jps, mkdir hadoop_lab, hdfs dfs -mkdir -p /maxtemp/input
+
+Input File (temperature.txt):
+2018,32
+2018,35
+2018,30
+2019,28
+2019,40
+2020,36
+2020,38
+
+Upload: hdfs dfs -put temperature.txt /maxtemp/input
+
+Java File (MaxTemperature.java):
+import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class MaxTemperature {
+    // -------- MAPPER --------
+    public static class TempMapper extends Mapper&lt;Object, Text, Text, IntWritable&gt; {
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            String[] parts = value.toString().split(",");
+            String year = parts[0];
+            int temp = Integer.parseInt(parts[1]);
+            context.write(new Text(year), new IntWritable(temp));
+        }
+    }
+    // -------- REDUCER --------
+    public static class TempReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; {
+        public void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException {
+            int maxTemp = Integer.MIN_VALUE;
+            for (IntWritable val : values) {
+                maxTemp = Math.max(maxTemp, val.get());
+            }
+            context.write(key, new IntWritable(maxTemp));
+        }
+    }
+    // -------- DRIVER --------
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "Maximum Temperature");
+        job.setJarByClass(MaxTemperature.class);
+        job.setMapperClass(TempMapper.class);
+        job.setReducerClass(TempReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+
+Compile/Run: javac -classpath $(hadoop classpath) -d . MaxTemperature.java, jar -cvf maxtemp.jar *, hadoop jar maxtemp.jar MaxTemperature /maxtemp/input /maxtemp/output, hdfs dfs -cat /maxtemp/output/part-r-00000
+            </pre>
+        </div>
+
+        <div class="code-block">
             <h2>PROGRAM 4: Student Grades</h2>
             <button class="copy-btn" onclick="copyToClipboard(event, 'code4')">Copy</button>
             <pre id="code4">
