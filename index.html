@@ -3,8 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERROR 404</title>
-    <h1> ERROR 404 DEPLOYMENT NOT FOUND</h1>
+    <title>404 | Lost in Transmission</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #ff3e3e;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            margin: 0;
+            text-shadow: 0 0 10px #ff3e3e;
+            animation: flicker 2s infinite;
+        }
+
+        h1 {
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        p {
+            color: #888;
+            max-width: 400px;
+        }
+
+        .glitch-box {
+            border: 1px solid #ff3e3e;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 22%, 24%, 55% { opacity: 0.2; }
+        }
+    </style>
+</head>
+<body>
+
+    <p class="error-code">404</p>
+    <div class="glitch-box">
+        <h1>Deployment Not Found</h1>
+        <p>The requested coordinates do not exist in this sector of the digital void.</p>
+    </div>
     
+    <p style="margin-top: 30px;">
+        <a href="/" style="color: #ff3e3e; text-decoration: none;">[ RETREAT TO SAFETY ]</a>
+    </p>
+
 </body>
 </html>
